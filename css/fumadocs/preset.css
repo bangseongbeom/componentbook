@@ -1,0 +1,2 @@
+/* Lets Tailwind CSS generate the classes used by `componentbook/fumadocs`. */
+@source "../../dist/fumadocs/**/*.js";

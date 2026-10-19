@@ -1,0 +1,6 @@
+packages:
+  - "examples/*"
+includeWorkspaceRoot: true
+allowBuilds:
+  esbuild: false
+dedupePeerDependents: false

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "allowArbitraryExtensions": true,
+    "declaration": true,
+    "declarationMap": true,
+    "erasableSyntaxOnly": true,
+    "jsx": "react-jsx",
+    "lib": ["es2025"],
+    "module": "NodeNext",
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "rewriteRelativeImportExtensions": true,
+    "rootDir": "./src",
+    "skipLibCheck": true,
+    "target": "es2025",
+    "types": ["node"],
+    "verbatimModuleSyntax": true
+  },
+  "include": ["./src"],
+  "exclude": ["**/*/*.test.*", "**/*.fixture.*"]
+}

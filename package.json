@@ -1,0 +1,89 @@
+{
+  "name": "componentbook",
+  "version": "0.1.0",
+  "description": "Generate MDX documentation for your components",
+  "keywords": [
+    "cli",
+    "componentbook",
+    "design-system",
+    "docs",
+    "documentation",
+    "fumadocs",
+    "mdx",
+    "react"
+  ],
+  "homepage": "https://github.com/bangseongbeom/componentbook",
+  "bugs": "https://github.com/bangseongbeom/componentbook/issues",
+  "license": "MIT",
+  "author": "방성범 (Bang Seongbeom) <bangseongbeom@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bangseongbeom/componentbook.git"
+  },
+  "bin": {
+    "componentbook": "dist/bin/componentbook.js"
+  },
+  "type": "module",
+  "exports": {
+    "./fumadocs": "./dist/fumadocs/index.js",
+    "./css/*": "./css/*"
+  },
+  "scripts": {
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "prepack": "tsc",
+    "test": "node --test",
+    "types:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.8.1",
+    "magic-string": "^1.4.3",
+    "mdast-util-from-markdown": "^2.1.0",
+    "shiki": "^4.5.0",
+    "typescript": "7.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "fumadocs-ui": "npm:@fumadocs/base-ui@^16.16.2",
+    "oxfmt": "^0.73.0",
+    "oxlint": "^1.88.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwindcss": "^4.3.3"
+  },
+  "peerDependencies": {
+    "fumadocs-ui": "npm:@fumadocs/base-ui@^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "fumadocs-ui": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "tailwindcss": {
+      "optional": true
+    }
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.14.0",
+      "onFail": "download"
+    }
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@12.14.0"
+}

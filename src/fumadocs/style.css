@@ -1,0 +1,4 @@
+/* Lets oxfmt sort and Tailwind CSS IntelliSense autocomplete the classes. */
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";

@@ -1,0 +1,12 @@
+{
+  "sortImports": true,
+  "sortPackageJson": { "sortScripts": true },
+  "overrides": [
+    {
+      "files": ["src/fumadocs/**"],
+      "options": {
+        "sortTailwindcss": { "stylesheet": "./src/fumadocs/style.css" }
+      }
+    }
+  ]
+}

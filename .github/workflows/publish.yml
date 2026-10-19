@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+# This is mostly boilerplate.
+
+name: Publish to npm
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install pnpm and Node.js
+        uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
+        with:
+          runtime: node@24
+          cache: false # never use caching in release builds
+          require-lockfile: true
+      - run: pnpm run --if-present build
+      - run: node --run test
+      - run: pnpm publish --no-git-checks # Or: pnpm stage publish
