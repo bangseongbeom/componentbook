@@ -25,4 +25,4 @@ jobs:
           require-lockfile: true
       - run: pnpm run --if-present build
       - run: node --run test
-      - run: pnpm publish --no-git-checks # Or: pnpm stage publish
+      - run: pnpm stage publish --no-git-checks
