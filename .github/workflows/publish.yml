@@ -13,16 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      id-token: write # Required for OIDC
+      id-token: write # Required for provenance
       contents: read
     steps:
       - uses: actions/checkout@v6
-      - name: Install pnpm and Node.js
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: Install pnpm
         uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
         with:
-          runtime: node@24
           cache: false # never use caching in release builds
           require-lockfile: true
       - run: pnpm run --if-present build
       - run: node --run test
-      - run: pnpm stage publish --no-git-checks
+      - run: pnpm stage publish --no-git-checks --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
