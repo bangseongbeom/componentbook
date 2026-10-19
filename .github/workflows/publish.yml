@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      id-token: write # Required for provenance
       contents: read
     steps:
       - uses: actions/checkout@v6
@@ -28,6 +27,6 @@ jobs:
           require-lockfile: true
       - run: pnpm run --if-present build
       - run: node --run test
-      - run: pnpm stage publish --no-git-checks --provenance
+      - run: pnpm stage publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
