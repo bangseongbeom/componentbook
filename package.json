@@ -20,9 +20,7 @@
     "type": "git",
     "url": "git+https://github.com/bangseongbeom/componentbook.git"
   },
-  "bin": {
-    "componentbook": "dist/bin/componentbook.js"
-  },
+  "bin": "dist/bin/componentbook.js",
   "type": "module",
   "exports": {
     "./fumadocs": "./dist/fumadocs/index.js",
