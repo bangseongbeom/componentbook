@@ -1,0 +1,155 @@
+---
+title: "Chart Container"
+---
+
+{/* componentbook-start */}
+
+import { ComponentbookPreview, ComponentbookTypeTable } from "componentbook/fumadocs";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, ChartStyle } from "../../../../src/components/ui/chart";
+
+## ChartContainer
+
+<ComponentbookPreview>
+  <ChartContainer config={{}}>{"children"}</ChartContainer>
+</ComponentbookPreview>
+
+```tsx
+import { ChartContainer } from "@/components/ui/chart";
+
+<ChartContainer config={{}}>children</ChartContainer>
+```
+
+<ComponentbookTypeTable client:load type={{
+  "children": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">ReactNode</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">ReactNode</span>",
+    "required": true,
+    "dummy": "\"children\""
+  },
+  "config": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">ChartConfig</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">ChartConfig</span>",
+    "required": true,
+    "dummy": "{}"
+  },
+  "initialDimension": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">object</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">{</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    width</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: number;</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    height</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: number;</span><br><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">}</span>",
+    "default": "<span style=\"--shiki-light:#005CC5;--shiki-dark:#79B8FF\">INITIAL_DIMENSION</span>"
+  }
+}} />
+
+## ChartTooltip
+
+<ComponentbookPreview>
+  <ChartTooltip />
+</ComponentbookPreview>
+
+```tsx
+import { ChartTooltip } from "@/components/ui/chart";
+
+<ChartTooltip />
+```
+
+## ChartTooltipContent
+
+<ComponentbookPreview>
+  <ChartTooltipContent />
+</ComponentbookPreview>
+
+```tsx
+import { ChartTooltipContent } from "@/components/ui/chart";
+
+<ChartTooltipContent />
+```
+
+<ComponentbookTypeTable client:load type={{
+  "hideLabel": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">boolean</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">boolean</span>",
+    "default": "<span style=\"--shiki-light:#005CC5;--shiki-dark:#79B8FF\">false</span>"
+  },
+  "hideIndicator": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">boolean</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">boolean</span>",
+    "default": "<span style=\"--shiki-light:#005CC5;--shiki-dark:#79B8FF\">false</span>"
+  },
+  "indicator": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">union</span>",
+    "typeDescription": "<span style=\"--shiki-light:#032F62;--shiki-dark:#9ECBFF\">\"dashed\"</span><span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\"> |</span><span style=\"--shiki-light:#032F62;--shiki-dark:#9ECBFF\"> \"dot\"</span><span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\"> |</span><span style=\"--shiki-light:#032F62;--shiki-dark:#9ECBFF\"> \"line\"</span>",
+    "default": "<span style=\"--shiki-light:#032F62;--shiki-dark:#9ECBFF\">\"dot\"</span>"
+  },
+  "nameKey": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">string</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">string</span>"
+  },
+  "labelKey": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">string</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">string</span>"
+  }
+}} />
+
+## ChartLegend
+
+<ComponentbookPreview>
+  <ChartLegend />
+</ComponentbookPreview>
+
+```tsx
+import { ChartLegend } from "@/components/ui/chart";
+
+<ChartLegend />
+```
+
+## ChartLegendContent
+
+<ComponentbookPreview>
+  <ChartLegendContent />
+</ComponentbookPreview>
+
+```tsx
+import { ChartLegendContent } from "@/components/ui/chart";
+
+<ChartLegendContent />
+```
+
+<ComponentbookTypeTable client:load type={{
+  "hideIcon": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">boolean</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">boolean</span>",
+    "default": "<span style=\"--shiki-light:#005CC5;--shiki-dark:#79B8FF\">false</span>"
+  },
+  "nameKey": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">string</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">string</span>"
+  }
+}} />
+
+## ChartStyle
+
+<ComponentbookPreview>
+  <ChartStyle id="id" config={{}} />
+</ComponentbookPreview>
+
+```tsx
+import { ChartStyle } from "@/components/ui/chart";
+
+<ChartStyle id="id" config={{}} />
+```
+
+<ComponentbookTypeTable client:load type={{
+  "id": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">string</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">string</span>",
+    "required": true,
+    "dummy": "\"id\""
+  },
+  "config": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">ChartConfig</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">ChartConfig</span>",
+    "required": true,
+    "dummy": "{}"
+  }
+}} />
+
+{/* componentbook-end */}

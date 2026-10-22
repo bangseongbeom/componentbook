@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "componentbook build && react-router build",
+    "build": "react-router build",
     "build-componentbook": "componentbook build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",

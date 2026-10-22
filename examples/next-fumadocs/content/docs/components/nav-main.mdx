@@ -1,0 +1,31 @@
+---
+title: "Nav Main"
+---
+
+{/* componentbook-start */}
+
+import { ComponentbookPreview, ComponentbookTypeTable } from "componentbook/fumadocs";
+import { NavMain } from "../../../components/nav-main";
+
+## NavMain
+
+<ComponentbookPreview>
+  <NavMain items={[{ title: "title", url: "url" }]} />
+</ComponentbookPreview>
+
+```tsx
+import { NavMain } from "@/components/nav-main";
+
+<NavMain items={[{ title: "title", url: "url" }]} />
+```
+
+<ComponentbookTypeTable client:load type={{
+  "items": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">array</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">{</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    title</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: string;</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    url</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: string;</span><br><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">    icon</span><span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\">?:</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\"> ReactNode;</span><br><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">}[]</span>",
+    "required": true,
+    "dummy": "[{ title: \"title\", url: \"url\" }]"
+  }
+}} />
+
+{/* componentbook-end */}

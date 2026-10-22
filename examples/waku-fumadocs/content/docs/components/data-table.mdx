@@ -1,0 +1,31 @@
+---
+title: "Data Table"
+---
+
+{/* componentbook-start */}
+
+import { ComponentbookPreview, ComponentbookTypeTable } from "componentbook/fumadocs";
+import { DataTable } from "../../../src/components/data-table";
+
+## DataTable
+
+<ComponentbookPreview>
+  <DataTable data={[{ id: 0, header: "header", type: "type", status: "status", target: "target", limit: "limit", reviewer: "reviewer" }]} />
+</ComponentbookPreview>
+
+```tsx
+import { DataTable } from "@/components/data-table";
+
+<DataTable data={[{ id: 0, header: "header", type: "type", status: "status", target: "target", limit: "limit", reviewer: "reviewer" }]} />
+```
+
+<ComponentbookTypeTable client:load type={{
+  "data": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">array</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">{</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    id</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: number;</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    header</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: string;</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    type</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: string;</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    status</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: string;</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    target</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: string;</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    limit</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: string;</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    reviewer</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: string;</span><br><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">}[]</span>",
+    "required": true,
+    "dummy": "[{ id: 0, header: \"header\", type: \"type\", status: \"status\", target: \"target\", limit: \"limit\", reviewer: \"reviewer\" }]"
+  }
+}} />
+
+{/* componentbook-end */}

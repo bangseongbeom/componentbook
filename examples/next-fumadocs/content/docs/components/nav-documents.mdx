@@ -1,0 +1,31 @@
+---
+title: "Nav Documents"
+---
+
+{/* componentbook-start */}
+
+import { ComponentbookPreview, ComponentbookTypeTable } from "componentbook/fumadocs";
+import { NavDocuments } from "../../../components/nav-documents";
+
+## NavDocuments
+
+<ComponentbookPreview>
+  <NavDocuments items={[{ name: "name", url: "url", icon: "icon" }]} />
+</ComponentbookPreview>
+
+```tsx
+import { NavDocuments } from "@/components/nav-documents";
+
+<NavDocuments items={[{ name: "name", url: "url", icon: "icon" }]} />
+```
+
+<ComponentbookTypeTable client:load type={{
+  "items": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">array</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">{</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    name</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: string;</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    url</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: string;</span><br><span style=\"--shiki-light:#6F42C1;--shiki-dark:#B392F0\">    icon</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">: ReactNode;</span><br><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">}[]</span>",
+    "required": true,
+    "dummy": "[{ name: \"name\", url: \"url\", icon: \"icon\" }]"
+  }
+}} />
+
+{/* componentbook-end */}

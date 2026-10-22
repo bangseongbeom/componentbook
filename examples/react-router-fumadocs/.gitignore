@@ -5,6 +5,3 @@
 /.react-router/
 /build/
 .source
-
-# Componentbook
-/content/docs/components/

@@ -1,0 +1,38 @@
+---
+title: "Default Search Dialog"
+---
+
+{/* componentbook-start */}
+
+import { ComponentbookTypeTable } from "componentbook/fumadocs";
+import DefaultSearchDialog from "../../../src/components/search";
+
+## DefaultSearchDialog
+
+```tsx
+import DefaultSearchDialog from "@/components/search";
+
+<DefaultSearchDialog open={true} onOpenChange={() => {}} dialogHandle={dialogHandle} />
+```
+
+<ComponentbookTypeTable client:load type={{
+  "open": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">boolean</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">boolean</span>",
+    "required": true,
+    "dummy": "true"
+  },
+  "onOpenChange": {
+    "type": "<span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\">function</span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">(</span><span style=\"--shiki-light:#E36209;--shiki-dark:#FFAB70\">open</span><span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\">:</span><span style=\"--shiki-light:#005CC5;--shiki-dark:#79B8FF\"> boolean</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">) </span><span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\">=></span><span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\"> void</span>",
+    "required": true,
+    "dummy": "() => {}"
+  },
+  "dialogHandle": {
+    "type": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">DialogHandle</span><span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\">&#x3C;</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">unknown</span><span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\">></span>",
+    "typeDescription": "<span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">DialogHandle</span><span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\">&#x3C;</span><span style=\"--shiki-light:#24292E;--shiki-dark:#E1E4E8\">unknown</span><span style=\"--shiki-light:#D73A49;--shiki-dark:#F97583\">></span>",
+    "required": true
+  }
+}} />
+
+{/* componentbook-end */}

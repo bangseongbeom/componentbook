@@ -2,7 +2,7 @@
   "name": "next-fumadocs",
   "private": true,
   "scripts": {
-    "build": "componentbook build && next build",
+    "build": "next build",
     "build-componentbook": "componentbook build",
     "dev": "next dev",
     "start": "next start",

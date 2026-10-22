@@ -5,7 +5,7 @@
   "sideEffects": false,
   "scripts": {
     "dev": "waku dev",
-    "build": "componentbook build && waku build",
+    "build": "waku build",
     "build-componentbook": "componentbook build",
     "start": "waku start",
     "types:check": "tsc --noEmit"
