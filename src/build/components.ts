@@ -58,7 +58,7 @@ export async function getComponents(
     if (!/^[A-Z]/.test(exportName)) continue;
 
     const tags = await checker.getJsDocTagsOfSymbol(symbol);
-    if (tags.some((tag) => tag.name === "internal")) continue;
+    if (tags.some((tag) => ["internal", "hidden", "ignore"].includes(tag.name))) continue;
 
     const signature = await getComponentSignature(checker, symbol);
     if (!signature) continue;

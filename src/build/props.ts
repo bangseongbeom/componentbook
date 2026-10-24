@@ -63,7 +63,8 @@ export async function getProps(
     await Promise.all(
       propertySymbols.map(async (propertySymbol, index) => {
         const tags = await checker.getJsDocTagsOfSymbol(propertySymbol);
-        if (tags.some((tag) => tag.name === "internal")) return undefined;
+        if (tags.some((tag) => ["internal", "hidden", "ignore"].includes(tag.name)))
+          return undefined;
 
         const optional = (propertySymbol.flags & SymbolFlags.Optional) !== 0;
         const propertyType = types[index];
