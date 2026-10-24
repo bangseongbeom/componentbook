@@ -22,10 +22,10 @@ export function ComponentbookTypeTable({
           name,
           {
             ...node,
-            description: node.description && <HTML html={node.description} />,
-            type: <Code html={node.type} />,
-            typeDescription: node.typeDescription && <Code html={node.typeDescription} />,
-            default: node.default && <Code html={node.default} />,
+            description: renderHTML(node.description),
+            type: renderCode(node.type),
+            typeDescription: renderCode(node.typeDescription),
+            default: renderCode(node.default),
           },
         ]),
       )}
@@ -33,12 +33,14 @@ export function ComponentbookTypeTable({
   );
 }
 
-function HTML({ html }: { html: string }): ReactNode {
+function renderHTML(html: string | undefined): ReactNode {
+  if (!html) return undefined;
   // `prose-no-margin` trims the margins of the first and last paragraphs.
   return <div className="prose-no-margin" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
-function Code({ html }: { html: string }): ReactNode {
+function renderCode(html: string | undefined): ReactNode {
+  if (!html) return undefined;
   return (
     <span className="shiki whitespace-pre-wrap">
       <code dangerouslySetInnerHTML={{ __html: html }} />
