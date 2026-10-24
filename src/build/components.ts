@@ -57,10 +57,12 @@ export async function getComponents(
     // Components are capitalized, unlike other functions.
     if (!/^[A-Z]/.test(exportName)) continue;
 
+    const tags = await checker.getJsDocTagsOfSymbol(symbol);
+    if (tags.some((tag) => tag.name === "internal")) continue;
+
     const signature = await getComponentSignature(checker, symbol);
     if (!signature) continue;
 
-    const tags = await checker.getJsDocTagsOfSymbol(symbol);
     const component: ComponentInfo = {
       exportName,
       isDefault,

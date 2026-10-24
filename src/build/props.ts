@@ -59,34 +59,38 @@ export async function getProps(
   const types = await checker.getTypeOfSymbol(propertySymbols);
   const defaults = getPropDefaults(declaration);
 
-  return Promise.all(
-    propertySymbols.map(async (propertySymbol, index) => {
-      const optional = (propertySymbol.flags & SymbolFlags.Optional) !== 0;
-      const propertyType = types[index];
-      const tags = await checker.getJsDocTagsOfSymbol(propertySymbol);
-      const description = await checker.getDocumentationCommentOfSymbol(propertySymbol);
-      const prop: PropInfo = {
-        name: propertySymbol.name,
-        ...(await formatType(project, propertyType, optional)),
-      };
+  return (
+    await Promise.all(
+      propertySymbols.map(async (propertySymbol, index) => {
+        const tags = await checker.getJsDocTagsOfSymbol(propertySymbol);
+        if (tags.some((tag) => tag.name === "internal")) return undefined;
 
-      if (!optional) {
-        prop.required = true;
-        const dummy = await getDummy(checker, propertyType, propertySymbol.name);
-        if (dummy !== undefined) prop.dummy = dummy;
-      }
+        const optional = (propertySymbol.flags & SymbolFlags.Optional) !== 0;
+        const propertyType = types[index];
+        const description = await checker.getDocumentationCommentOfSymbol(propertySymbol);
+        const prop: PropInfo = {
+          name: propertySymbol.name,
+          ...(await formatType(project, propertyType, optional)),
+        };
 
-      if (description) prop.description = description;
+        if (!optional) {
+          prop.required = true;
+          const dummy = await getDummy(checker, propertyType, propertySymbol.name);
+          if (dummy !== undefined) prop.dummy = dummy;
+        }
 
-      const defaultValue =
-        defaults.get(propertySymbol.name) ?? tags.find((tag) => tag.name === "default")?.text;
-      if (defaultValue) prop.default = defaultValue;
+        if (description) prop.description = description;
 
-      if (tags.some((tag) => tag.name === "deprecated")) prop.deprecated = true;
+        const defaultValue =
+          defaults.get(propertySymbol.name) ?? tags.find((tag) => tag.name === "default")?.text;
+        if (defaultValue) prop.default = defaultValue;
 
-      return prop;
-    }),
-  );
+        if (tags.some((tag) => tag.name === "deprecated")) prop.deprecated = true;
+
+        return prop;
+      }),
+    )
+  ).filter((prop) => prop !== undefined);
 }
 
 async function formatType(
