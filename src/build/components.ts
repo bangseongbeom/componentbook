@@ -24,6 +24,7 @@ export interface ComponentInfo {
   exportName: string;
   isDefault: boolean;
   description?: string;
+  remarks?: string;
   examples: string[];
   props: PropInfo[];
 }
@@ -71,6 +72,8 @@ export async function getComponents(
     };
     const description = await checker.getDocumentationCommentOfSymbol(symbol);
     if (description) component.description = description;
+    const remarks = tags.find((tag) => tag.name === "remarks")?.text;
+    if (remarks) component.remarks = remarks;
 
     components.push(component);
   }

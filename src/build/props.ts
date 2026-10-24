@@ -34,6 +34,7 @@ export interface PropInfo {
   typeDescription: string;
   required?: boolean;
   description?: string;
+  remarks?: string;
   default?: string;
   deprecated?: boolean;
   /** JS expression of a dummy value for the prop type. Only set for required props. */
@@ -81,6 +82,9 @@ export async function getProps(
         }
 
         if (description) prop.description = description;
+
+        const remarks = tags.find((tag) => tag.name === "remarks")?.text;
+        if (remarks) prop.remarks = remarks;
 
         const defaultValue =
           defaults.get(propertySymbol.name) ??

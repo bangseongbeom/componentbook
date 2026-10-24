@@ -39,6 +39,7 @@
     "@clack/prompts": "^1.8.1",
     "magic-string": "^1.4.3",
     "mdast-util-from-markdown": "^2.1.0",
+    "micromark": "^4.0.2",
     "shiki": "^4.5.0",
     "typescript": "7.0.2"
   },

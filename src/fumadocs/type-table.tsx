@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 /** This interface is needed because the code is highlighted at build time as HTML strings, not `ReactNode`s. */
 interface ComponentbookTypeNode extends TypeNode {
+  description?: string;
   type: string;
   typeDescription?: string;
   default?: string;
@@ -21,6 +22,7 @@ export function ComponentbookTypeTable({
           name,
           {
             ...node,
+            description: node.description && <HTML html={node.description} />,
             type: <Code html={node.type} />,
             typeDescription: node.typeDescription && <Code html={node.typeDescription} />,
             default: node.default && <Code html={node.default} />,
@@ -29,6 +31,11 @@ export function ComponentbookTypeTable({
       )}
     />
   );
+}
+
+function HTML({ html }: { html: string }): ReactNode {
+  // `prose-no-margin` trims the margins of the first and last paragraphs.
+  return <div className="prose-no-margin" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 function Code({ html }: { html: string }): ReactNode {

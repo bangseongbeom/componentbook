@@ -3,6 +3,7 @@ import { dirname } from "node:path";
 
 import MagicString from "magic-string";
 import { fromMarkdown } from "mdast-util-from-markdown";
+import { micromark } from "micromark";
 import { codeToHtml } from "shiki";
 
 import type { ComponentInfo } from "./components.js";
@@ -109,6 +110,7 @@ async function renderComponentSection(
   const lines = [`## ${exportName}`, ""];
 
   if (component.description) lines.push(escapeMDX(component.description), "");
+  if (component.remarks) lines.push("**Remarks**", "", escapeMDX(component.remarks), "");
 
   if (component.examples.length > 0)
     for (const example of component.examples) lines.push(...renderExample(doc, component, example));
@@ -237,13 +239,14 @@ function renderChildren({ dummy }: PropInfo): string {
   return /^"[^"\\&{}<>]*"$/.test(dummy) ? (JSON.parse(dummy) as string) : `{${dummy}}`;
 }
 
-/** Renders the type table, with its code highlighted at build time. */
+/** Renders the type table, with its code highlighted and its descriptions rendered at build time. */
 async function renderTypeTable(props: PropInfo[]): Promise<string> {
   const entries = await Promise.all(
-    props.map(async ({ name, ...prop }) => [
+    props.map(async ({ name, remarks, ...prop }) => [
       name,
       {
         ...prop,
+        description: renderDescription(prop.description, remarks),
         type: await highlightCode(prop.type),
         typeDescription: await highlightCode(prop.typeDescription),
         default: prop.default && (await highlightCode(prop.default)),
@@ -253,6 +256,16 @@ async function renderTypeTable(props: PropInfo[]): Promise<string> {
   const type = JSON.stringify(Object.fromEntries(entries), null, 2);
   // `client:load` is for Astro. Without it, the table's rows can't be expanded.
   return `<ComponentbookTypeTable client:load type={${type}} />`;
+}
+
+function renderDescription(
+  description: string | undefined,
+  remarks: string | undefined,
+): string | undefined {
+  const lines: string[] = [];
+  if (description) lines.push(description, "");
+  if (remarks) lines.push("**Remarks**", "", remarks, "");
+  return lines.length > 0 ? micromark(lines.join("\n")) : undefined;
 }
 
 function highlightCode(code: string): Promise<string> {
