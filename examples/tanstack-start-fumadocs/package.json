@@ -5,7 +5,7 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "componentbook build && vite build",
     "build-componentbook": "componentbook build",
     "start": "vite preview",
     "preview": "vite preview",

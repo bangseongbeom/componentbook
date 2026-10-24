@@ -4,3 +4,6 @@
 dist
 .source
 src/pages.gen.ts
+
+# Componentbook
+/content/docs/components/

@@ -16,3 +16,6 @@ node_modules
 .tanstack
 
 .source
+
+# Componentbook
+/content/docs/components/
