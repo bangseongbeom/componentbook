@@ -84,7 +84,9 @@ export async function getProps(
 
         const defaultValue =
           defaults.get(propertySymbol.name) ??
-          tags.find((tag) => ["defaultValue", "default"].includes(tag.name))?.text;
+          tags
+            .find((tag) => ["defaultValue", "default"].includes(tag.name))
+            ?.text?.replace(/^`([^`]*)`$/, "$1");
         if (defaultValue) prop.default = defaultValue;
 
         if (tags.some((tag) => tag.name === "deprecated")) prop.deprecated = true;
