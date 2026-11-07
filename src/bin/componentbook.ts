@@ -3,6 +3,7 @@ import { parseArgs } from "node:util";
 
 import packageConfig from "../../package.json" with { type: "json" };
 import build from "../build/index.js";
+import { loadConfig } from "../config.js";
 import watch from "../watch/index.js";
 
 const [bin] = Object.keys(packageConfig.bin);
@@ -62,8 +63,9 @@ Options:
   -h, --help               display help for command`;
 
 const command = positionals[0];
-const outputDir = values["output-dir"] ?? "content/docs/components";
-const exclude = values.exclude ?? [];
+const config = await loadConfig();
+const outputDir = values["output-dir"] ?? config.outputDir ?? "content/docs/components";
+const exclude = values.exclude ?? config.exclude ?? [];
 
 if (values.version) console.log(packageConfig.version);
 else if (values.help)
