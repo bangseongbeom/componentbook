@@ -4,6 +4,7 @@
   "scripts": {
     "build": "componentbook build && next build",
     "build-componentbook": "componentbook build",
+    "watch-componentbook": "componentbook watch",
     "dev": "next dev",
     "start": "next start",
     "types:check": "next typegen && tsc --noEmit"

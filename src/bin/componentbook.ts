@@ -3,6 +3,7 @@ import { parseArgs } from "node:util";
 
 import packageConfig from "../../package.json" with { type: "json" };
 import build from "../build/index.js";
+import watch from "../watch/index.js";
 
 const [bin] = Object.keys(packageConfig.bin);
 
@@ -34,6 +35,7 @@ Options:
 
 Commands:
   build                    build the Componentbook project
+  watch                    build the Componentbook project and rebuild on changes
 
 Run "${bin} <command> --help" for command options.`;
 
@@ -45,7 +47,16 @@ Options:
   -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components")
   -h, --help               display help for command`;
 
+const watchHelp = `Usage: ${bin} watch [options]
+
+Build the Componentbook project and rebuild on changes
+
+Options:
+  -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components")
+  -h, --help               display help for command`;
+
 const command = positionals[0];
+const outputDir = values["output-dir"] ?? "content/docs/components";
 
 if (values.version) console.log(packageConfig.version);
 else if (values.help)
@@ -54,11 +65,15 @@ else if (values.help)
       console.log(buildHelp);
       break;
 
+    case "watch":
+      console.log(watchHelp);
+      break;
+
     default:
       console.log(help);
   }
-else if (command === "build")
-  await build({ outputDir: values["output-dir"] ?? "content/docs/components" });
+else if (command === "build") await build({ outputDir });
+else if (command === "watch") await watch({ outputDir });
 else if (command === undefined) {
   console.error(help);
   process.exitCode = 1;

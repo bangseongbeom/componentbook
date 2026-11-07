@@ -7,6 +7,7 @@
     "start": "astro dev",
     "build": "componentbook build && astro build",
     "build-componentbook": "componentbook build",
+    "watch-componentbook": "componentbook watch",
     "preview": "astro preview",
     "astro": "astro"
   },

@@ -20,7 +20,7 @@ export interface ComponentDoc {
   components: ComponentInfo[];
 }
 
-export default async function build({ outputDir }: { outputDir: string }): Promise<void> {
+export default async function ({ outputDir }: { outputDir: string }): Promise<void> {
   intro("componentbook build");
 
   const sources = await scanSources();

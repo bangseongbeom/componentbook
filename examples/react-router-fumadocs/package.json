@@ -5,6 +5,7 @@
   "scripts": {
     "build": "componentbook build && react-router build",
     "build-componentbook": "componentbook build",
+    "watch-componentbook": "componentbook watch",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "types:check": "react-router typegen && tsc --noEmit"
