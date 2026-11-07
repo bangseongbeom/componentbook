@@ -24,7 +24,7 @@ import {
 import { createUnionTypeNode } from "typescript/unstable/ast/factory";
 import { Emitter, Project, Signature, SymbolFlags, type Type } from "typescript/unstable/async";
 
-import { getDummy } from "./dummies.js";
+import { getDummy } from "./dummy.js";
 
 export interface PropInfo {
   name: string;

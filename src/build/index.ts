@@ -1,11 +1,11 @@
 import { dirname, relative, resolve } from "node:path";
 import { styleText } from "node:util";
 
-import { type ComponentInfo, getComponents } from "./components.js";
+import { type ComponentInfo, getComponents } from "./component.js";
 import { writeMDX, type WriteStatus } from "./mdx.js";
-import { getDisplaySpecifier, getRelativeSpecifier } from "./module-specifiers.js";
+import { getDisplaySpecifier, getRelativeSpecifier } from "./module-specifier.js";
 import { withProject } from "./project.js";
-import { componentRoots, scanSources } from "./sources.js";
+import { componentRoots, scanSources } from "./source.js";
 
 export interface ComponentDoc {
   /** Absolute path to the component source file. */

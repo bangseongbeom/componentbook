@@ -6,7 +6,7 @@ import { fromMarkdown } from "mdast-util-from-markdown";
 import { micromark } from "micromark";
 import { codeToHtml } from "shiki";
 
-import type { ComponentInfo } from "./components.js";
+import type { ComponentInfo } from "./component.js";
 import type { ComponentDoc } from "./index.js";
 import type { PropInfo } from "./props.js";
 
