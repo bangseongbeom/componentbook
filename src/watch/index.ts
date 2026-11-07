@@ -6,10 +6,16 @@ import { debounce } from "perfect-debounce";
 
 import build from "../build/index.js";
 
-export default async function ({ outputDir }: { outputDir: string }): Promise<void> {
+export default async function ({
+  outputDir,
+  exclude,
+}: {
+  outputDir: string;
+  exclude: string[];
+}): Promise<void> {
   const rebuild = debounce(async () => {
     try {
-      await build({ outputDir });
+      await build({ outputDir, exclude });
     } catch (error) {
       console.error(styleText("red", "Failed to build components", { stream: process.stderr }));
       console.error(error instanceof Error ? error.message : String(error));

@@ -1,5 +1,5 @@
 import { glob } from "node:fs/promises";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 
 export const componentRoots = ["components", "src/components", "app/components"];
 
@@ -8,16 +8,13 @@ export interface ComponentFile {
   relativePath: string;
 }
 
-export async function scanComponentFiles(): Promise<ComponentFile[]> {
+export async function scanComponentFiles(exclude: string[]): Promise<ComponentFile[]> {
   const componentFiles: ComponentFile[] = [];
 
   for (const root of componentRoots) {
-    const absoluteRoot = join(process.cwd(), root);
-
     const entries: string[] = [];
-    for await (const entry of glob("**/*.{tsx,jsx}", {
-      cwd: absoluteRoot,
-      exclude: ["**/*.{test,spec,stories}.*"],
+    for await (const entry of glob(`${root}/**/*.{tsx,jsx}`, {
+      exclude: ["**/*.{test,spec,stories}.*", ...exclude],
     }))
       entries.push(entry);
 
@@ -25,8 +22,8 @@ export async function scanComponentFiles(): Promise<ComponentFile[]> {
 
     for (const entry of entries)
       componentFiles.push({
-        absolutePath: join(absoluteRoot, entry),
-        relativePath: entry,
+        absolutePath: join(process.cwd(), entry),
+        relativePath: relative(root, entry),
       });
   }
 

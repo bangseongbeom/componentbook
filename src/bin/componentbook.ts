@@ -21,6 +21,10 @@ const { values, positionals } = parseArgs({
       short: "o",
       type: "string",
     },
+    exclude: {
+      type: "string",
+      multiple: true,
+    },
   },
   allowPositionals: true,
 });
@@ -45,6 +49,7 @@ Build the Componentbook project
 
 Options:
   -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components")
+      --exclude <pattern>  skip paths matching a glob pattern, e.g. "src/components/ui" (repeatable)
   -h, --help               display help for command`;
 
 const watchHelp = `Usage: ${bin} watch [options]
@@ -53,10 +58,12 @@ Build the Componentbook project and rebuild on changes
 
 Options:
   -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components")
+      --exclude <pattern>  skip paths matching a glob pattern, e.g. "src/components/ui" (repeatable)
   -h, --help               display help for command`;
 
 const command = positionals[0];
 const outputDir = values["output-dir"] ?? "content/docs/components";
+const exclude = values.exclude ?? [];
 
 if (values.version) console.log(packageConfig.version);
 else if (values.help)
@@ -72,8 +79,8 @@ else if (values.help)
     default:
       console.log(help);
   }
-else if (command === "build") await build({ outputDir });
-else if (command === "watch") await watch({ outputDir });
+else if (command === "build") await build({ outputDir, exclude });
+else if (command === "watch") await watch({ outputDir, exclude });
 else if (command === undefined) {
   console.error(help);
   process.exitCode = 1;

@@ -19,8 +19,14 @@ export interface ComponentDoc {
   components: ComponentInfo[];
 }
 
-export default async function ({ outputDir }: { outputDir: string }): Promise<void> {
-  const componentFiles = await scanComponentFiles();
+export default async function ({
+  outputDir,
+  exclude,
+}: {
+  outputDir: string;
+  exclude: string[];
+}): Promise<void> {
+  const componentFiles = await scanComponentFiles(exclude);
   if (componentFiles.length === 0) {
     console.error(
       styleText("red", `No components found in ${componentRoots.join(", ")}`, {
