@@ -34,7 +34,7 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
   console.log(`Analyzing ${componentFiles.length} files...`);
 
   const docs: ComponentDoc[] = [];
-  const excludedComponentFiles: string[] = [];
+  const excludedFiles: string[] = [];
   try {
     await withProject(async (project) => {
       const results = await Promise.all(
@@ -52,18 +52,19 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
 
       for (const { absolutePath, relativePath, components } of results) {
         if (!components) {
-          excludedComponentFiles.push(absolutePath);
+          excludedFiles.push(absolutePath);
           continue;
         }
         if (components.length === 0) continue;
 
+        const sourcePath = absolutePath;
         const mdxPath = resolve(
           process.cwd(),
           outputDir,
           relativePath.replace(/\.[jt]sx$/, ".mdx"),
         );
         docs.push({
-          sourcePath: absolutePath,
+          sourcePath,
           mdxPath,
           relativeSpecifier: getRelativeSpecifier(dirname(mdxPath), absolutePath),
           displaySpecifier: getDisplaySpecifier(project, absolutePath),
@@ -81,11 +82,11 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
   const componentCount = docs.reduce((count, doc) => count + doc.components.length, 0);
   console.log(`Found ${componentCount} components in ${docs.length} files`);
 
-  for (const excludedComponentFile of excludedComponentFiles)
+  for (const excludedFile of excludedFiles)
     console.warn(
       styleText(
         "yellow",
-        `excluded ${relative(process.cwd(), excludedComponentFile)} (not included in tsconfig.json)`,
+        `excluded ${relative(process.cwd(), excludedFile)} (not included in tsconfig.json)`,
         { stream: process.stderr },
       ),
     );
