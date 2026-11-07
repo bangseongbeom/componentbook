@@ -77,7 +77,7 @@ async function renderBlock(doc: ComponentDoc): Promise<string> {
 /** The default export, or the first component. */
 function getPrimaryComponent(doc: ComponentDoc): ComponentInfo {
   const [first] = doc.components;
-  if (!first) throw new Error(`No components in ${doc.sourceFileName}`);
+  if (!first) throw new Error(`No components in ${doc.sourcePath}`);
   return doc.components.find((component) => component.isDefault) ?? first;
 }
 

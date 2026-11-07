@@ -9,7 +9,7 @@ import { withProject } from "./project.js";
 
 export interface ComponentDoc {
   /** Absolute path to the component source file. */
-  sourceFileName: string;
+  sourcePath: string;
   /** Absolute path to the generated MDX file. */
   mdxPath: string;
   /** Module specifier used to import the component from the MDX file. */
@@ -38,31 +38,35 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
   try {
     await withProject(async (project) => {
       const results = await Promise.all(
-        componentFiles.map(async ({ fileName, route }) => {
-          const sourceFile = await project.program.getSourceFile(fileName);
-          if (!sourceFile) return { fileName, route };
+        componentFiles.map(async ({ absolutePath, relativePath }) => {
+          const sourceFile = await project.program.getSourceFile(absolutePath);
+          if (!sourceFile) return { absolutePath, relativePath };
           else
             return {
-              fileName,
-              route,
+              absolutePath,
+              relativePath,
               components: await getComponents(project, sourceFile),
             };
         }),
       );
 
-      for (const { fileName, route, components } of results) {
+      for (const { absolutePath, relativePath, components } of results) {
         if (!components) {
-          excludedComponentFiles.push(fileName);
+          excludedComponentFiles.push(absolutePath);
           continue;
         }
         if (components.length === 0) continue;
 
-        const mdxPath = resolve(process.cwd(), outputDir, `${route}.mdx`);
+        const mdxPath = resolve(
+          process.cwd(),
+          outputDir,
+          relativePath.replace(/\.[jt]sx$/, ".mdx"),
+        );
         docs.push({
-          sourceFileName: fileName,
+          sourcePath: absolutePath,
           mdxPath,
-          relativeSpecifier: getRelativeSpecifier(dirname(mdxPath), fileName),
-          displaySpecifier: getDisplaySpecifier(project, fileName),
+          relativeSpecifier: getRelativeSpecifier(dirname(mdxPath), absolutePath),
+          displaySpecifier: getDisplaySpecifier(project, absolutePath),
           components,
         });
       }
