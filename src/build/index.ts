@@ -2,7 +2,7 @@ import { dirname, relative, resolve } from "node:path";
 import { styleText } from "node:util";
 
 import { type ComponentInfo, getComponents } from "./component.js";
-import { componentRoots, scanComponentFiles } from "./file.js";
+import { componentRoots, scanComponentFiles } from "./component-file.js";
 import { writeMDX, type WriteStatus } from "./mdx.js";
 import { getDisplaySpecifier, getRelativeSpecifier } from "./module-specifier.js";
 import { withProject } from "./project.js";
