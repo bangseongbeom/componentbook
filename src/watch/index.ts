@@ -9,8 +9,7 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
   const rebuild = debounce(() => build({ outputDir }));
   const outputPrefix = relative(process.cwd(), outputDir) + sep;
 
-  await rebuild();
-  console.log("Watching for changes...");
+  rebuild().then(() => console.log("Watching for changes..."));
 
   for await (const _ of watch(process.cwd(), {
     recursive: true,
