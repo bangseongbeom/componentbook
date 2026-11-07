@@ -4,7 +4,7 @@ import { parseArgs } from "node:util";
 import packageConfig from "../../package.json" with { type: "json" };
 import build from "../build/index.js";
 import { loadConfig } from "../config.js";
-import watch from "../watch/index.js";
+import watch from "../watch.js";
 
 const [bin] = Object.keys(packageConfig.bin);
 

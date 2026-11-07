@@ -4,7 +4,7 @@ import { styleText } from "node:util";
 
 import { debounce } from "perfect-debounce";
 
-import build from "../build/index.js";
+import build from "./build/index.js";
 
 export default async function ({
   outputDir,
