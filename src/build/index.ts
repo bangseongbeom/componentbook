@@ -1,6 +1,5 @@
 import { dirname, relative, resolve } from "node:path";
-
-import { intro, log, outro, spinner } from "@clack/prompts";
+import { styleText } from "node:util";
 
 import { type ComponentInfo, getComponents } from "./components.js";
 import { writeMDX, type WriteStatus } from "./mdx.js";
@@ -21,17 +20,18 @@ export interface ComponentDoc {
 }
 
 export default async function ({ outputDir }: { outputDir: string }): Promise<void> {
-  intro("componentbook build");
-
   const sources = await scanSources();
   if (sources.length === 0) {
-    log.error(`No components found in ${componentRoots.join(", ")}`);
+    console.error(
+      styleText("red", `No components found in ${componentRoots.join(", ")}`, {
+        stream: process.stderr,
+      }),
+    );
     process.exitCode = 1;
     return;
   }
 
-  const s = spinner();
-  s.start(`Analyzing ${sources.length} files`);
+  console.log(`Analyzing ${sources.length} files...`);
 
   const docs: ComponentDoc[] = [];
   const excludedSources: string[] = [];
@@ -68,17 +68,23 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
       }
     });
   } catch (error) {
-    s.error("Failed to analyze components");
-    log.error(error instanceof Error ? error.message : String(error));
+    console.error(styleText("red", "Failed to analyze components", { stream: process.stderr }));
+    console.error(error instanceof Error ? error.message : String(error));
     process.exitCode = 1;
     return;
   }
 
   const componentCount = docs.reduce((count, doc) => count + doc.components.length, 0);
-  s.stop(`Found ${componentCount} components in ${docs.length} files`);
+  console.log(`Found ${componentCount} components in ${docs.length} files`);
 
   for (const excludedSource of excludedSources)
-    log.warn(`excluded ${relative(process.cwd(), excludedSource)} (not included in tsconfig.json)`);
+    console.warn(
+      styleText(
+        "yellow",
+        `excluded ${relative(process.cwd(), excludedSource)} (not included in tsconfig.json)`,
+        { stream: process.stderr },
+      ),
+    );
 
   const counts: Record<WriteStatus, number> = {
     created: 0,
@@ -93,12 +99,17 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
     counts[status]++;
 
     const relativePath = relative(process.cwd(), doc.mdxPath);
-    if (status === "created" || status === "updated") log.success(`${status} ${relativePath}`);
+    if (status === "created" || status === "updated")
+      console.log(styleText("green", `${status} ${relativePath}`));
     else if (status === "skipped")
-      log.warn(`skipped ${relativePath} (componentbook markers not found)`);
+      console.warn(
+        styleText("yellow", `skipped ${relativePath} (componentbook markers not found)`, {
+          stream: process.stderr,
+        }),
+      );
   }
 
-  outro(
+  console.log(
     Object.entries(counts)
       .filter(([status, count]) => count > 0 || status !== "skipped")
       .map(([status, count]) => `${count} ${status}`)

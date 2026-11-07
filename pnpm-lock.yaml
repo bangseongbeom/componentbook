@@ -166,9 +166,6 @@ importers:
 
   .:
     dependencies:
-      '@clack/prompts':
-        specifier: ^1.8.1
-        version: 1.8.1
       magic-string:
         specifier: ^1.4.5
         version: 1.4.5

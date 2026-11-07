@@ -1,7 +1,6 @@
 import { watch } from "node:fs/promises";
 import { relative, sep } from "node:path";
 
-import { log } from "@clack/prompts";
 import { debounce } from "perfect-debounce";
 
 import build from "../build/index.js";
@@ -11,7 +10,7 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
   const outputPrefix = relative(process.cwd(), outputDir) + sep;
 
   await rebuild();
-  log.info("Watching for changes", { withGuide: false });
+  console.log("Watching for changes...");
 
   for await (const _ of watch(process.cwd(), {
     recursive: true,
