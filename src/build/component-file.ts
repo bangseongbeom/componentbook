@@ -3,14 +3,14 @@ import { join, sep } from "node:path";
 
 export const componentRoots = ["components", "src/components", "app/components"];
 
-export interface Source {
+export interface ComponentFile {
   fileName: string;
   /** Path relative to the component root without extension (e.g. `ui/button`). */
   route: string;
 }
 
-export async function scanSources(): Promise<Source[]> {
-  const sources: Source[] = [];
+export async function scanComponentFiles(): Promise<ComponentFile[]> {
+  const componentFiles: ComponentFile[] = [];
 
   for (const root of componentRoots) {
     const absoluteRoot = join(process.cwd(), root);
@@ -24,7 +24,7 @@ export async function scanSources(): Promise<Source[]> {
 
     entries.sort();
     for (const entry of entries)
-      sources.push({
+      componentFiles.push({
         fileName: join(absoluteRoot, entry),
         route: entry
           .replace(/\.[jt]sx$/, "")
@@ -33,5 +33,5 @@ export async function scanSources(): Promise<Source[]> {
       });
   }
 
-  return sources;
+  return componentFiles;
 }

@@ -1,11 +1,11 @@
 import { dirname, relative, resolve } from "node:path";
 import { styleText } from "node:util";
 
+import { componentRoots, scanComponentFiles } from "./component-file.js";
 import { type ComponentInfo, getComponents } from "./component.js";
 import { writeMDX, type WriteStatus } from "./mdx.js";
 import { getDisplaySpecifier, getRelativeSpecifier } from "./module-specifier.js";
 import { withProject } from "./project.js";
-import { componentRoots, scanSources } from "./source.js";
 
 export interface ComponentDoc {
   /** Absolute path to the component source file. */
@@ -20,8 +20,8 @@ export interface ComponentDoc {
 }
 
 export default async function ({ outputDir }: { outputDir: string }): Promise<void> {
-  const sources = await scanSources();
-  if (sources.length === 0) {
+  const componentFiles = await scanComponentFiles();
+  if (componentFiles.length === 0) {
     console.error(
       styleText("red", `No components found in ${componentRoots.join(", ")}`, {
         stream: process.stderr,
@@ -31,14 +31,14 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
     return;
   }
 
-  console.log(`Analyzing ${sources.length} files...`);
+  console.log(`Analyzing ${componentFiles.length} files...`);
 
   const docs: ComponentDoc[] = [];
-  const excludedSources: string[] = [];
+  const excludedComponentFiles: string[] = [];
   try {
     await withProject(async (project) => {
       const results = await Promise.all(
-        sources.map(async ({ fileName, route }) => {
+        componentFiles.map(async ({ fileName, route }) => {
           const sourceFile = await project.program.getSourceFile(fileName);
           if (!sourceFile) return { fileName, route };
           else
@@ -52,7 +52,7 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
 
       for (const { fileName, route, components } of results) {
         if (!components) {
-          excludedSources.push(fileName);
+          excludedComponentFiles.push(fileName);
           continue;
         }
         if (components.length === 0) continue;
@@ -77,11 +77,11 @@ export default async function ({ outputDir }: { outputDir: string }): Promise<vo
   const componentCount = docs.reduce((count, doc) => count + doc.components.length, 0);
   console.log(`Found ${componentCount} components in ${docs.length} files`);
 
-  for (const excludedSource of excludedSources)
+  for (const excludedComponentFile of excludedComponentFiles)
     console.warn(
       styleText(
         "yellow",
-        `excluded ${relative(process.cwd(), excludedSource)} (not included in tsconfig.json)`,
+        `excluded ${relative(process.cwd(), excludedComponentFile)} (not included in tsconfig.json)`,
         { stream: process.stderr },
       ),
     );
