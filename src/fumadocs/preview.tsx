@@ -7,7 +7,7 @@ export function ComponentbookPreview({ children }: { children: ReactNode }): Rea
   return (
     // `not-prose` disables `prose` inside the preview.
     // `contain-paint` keeps absolute/fixed elements inside the frame.
-    <div className="not-prose flex min-h-32 items-center justify-center rounded-xl border bg-fd-card p-6 text-fd-card-foreground contain-paint">
+    <div className="not-prose rounded-xl border bg-fd-card p-6 text-fd-card-foreground contain-paint">
       <PreviewErrorBoundary>{children}</PreviewErrorBoundary>
     </div>
   );
@@ -23,7 +23,7 @@ class PreviewErrorBoundary extends Component<{ children: ReactNode }, { error: E
   override render(): ReactNode {
     if (this.state.error)
       return (
-        <p className="text-sm text-fd-muted-foreground">
+        <p className="text-center text-sm text-fd-muted-foreground">
           Preview unavailable: {this.state.error.message}
         </p>
       );

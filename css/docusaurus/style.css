@@ -1,13 +1,9 @@
 .componentbook-preview {
-  align-items: center;
   background-color: var(--ifm-card-background-color);
   border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-300);
   border-radius: var(--ifm-card-border-radius);
   contain: paint; /* Keeps absolute/fixed elements inside the frame. */
-  display: flex;
-  justify-content: center;
   margin-bottom: var(--ifm-leading);
-  min-height: 8rem;
   padding: calc(var(--ifm-card-vertical-spacing) * 1.5)
     calc(var(--ifm-card-horizontal-spacing) * 1.5);
 }
@@ -16,6 +12,7 @@
   color: var(--ifm-color-emphasis-700);
   font-size: 0.875rem;
   margin: 0;
+  text-align: center;
 }
 
 /* Highlighted at build time by Shiki with `defaultColor: false`. */
