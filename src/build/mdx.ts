@@ -46,7 +46,7 @@ export async function writeMDX(doc: ComponentDoc, framework: Framework): Promise
 
 function renderFrontmatter(doc: ComponentDoc): string {
   const primary = getPrimaryComponent(doc);
-  const lines = ["---", `title: ${JSON.stringify(toStartCase(primary.exportName))}`];
+  const lines = ["---", `title: ${JSON.stringify(primary.exportName)}`];
   const description = primary.description?.split("\n")[0]?.trim();
   if (description) lines.push(`description: ${JSON.stringify(description)}`);
   lines.push("---");
@@ -80,16 +80,6 @@ function getPrimaryComponent(doc: ComponentDoc): ComponentInfo {
   const [first] = doc.components;
   if (!first) throw new Error(`No components in ${doc.sourcePath}`);
   return doc.components.find((component) => component.isDefault) ?? first;
-}
-
-/** Splits an identifier into capitalized words (e.g. `HTMLInputField` to `HTML Input Field`). */
-function toStartCase(name: string): string {
-  return name
-    .replace(/(?<=[a-z\d])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/g, " ")
-    .split(/[\s_$]+/)
-    .filter((word) => word !== "")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
 }
 
 function renderImportClause(components: ComponentInfo[]): string {
