@@ -1,6 +1,6 @@
 import { llms, loader } from 'fumadocs-core/source';
 import { defineDocs } from 'fumadocs-mdx/macro';
-import { docsContentRoute, docsRoute } from './shared';
+import { docsRoute } from './shared';
 
 export const docs = defineDocs({
   dir: 'content/docs',
@@ -21,4 +21,6 @@ export const docsLlms = llms(source, {
   renderPage: async (page) => `# ${page.data.title} (${page.url})
 
 ${await page.data.getText('processed')}`,
+  // link to the files under `/llms.mdx`
+  renderUrl: (item) => (/^\/.*\.(md|txt)$/.test(item.url) ? `/llms.mdx${item.url}` : item.url),
 });

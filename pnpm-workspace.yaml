@@ -6,3 +6,6 @@ allowBuilds:
   core-js: false
   esbuild: false
 dedupePeerDependents: false
+minimumReleaseAgeExclude:
+  - '@fumadocs/base-ui@16.19.3'
+  - fumadocs-core@16.19.3

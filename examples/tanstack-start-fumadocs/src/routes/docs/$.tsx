@@ -11,7 +11,7 @@ import {
   ViewOptionsPopover,
 } from 'fumadocs-ui/layouts/docs/page';
 import { baseOptions } from '@/lib/layout.shared';
-import { getPageImageUrl, getPageMarkdownUrl, gitConfig } from '@/lib/shared';
+import { getPageImageUrl, gitConfig } from '@/lib/shared';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense, use } from 'react';
 import { useMDXComponents } from '@/components/mdx';
@@ -39,7 +39,7 @@ const serverLoader = createServerFn({
 
     return {
       path: page.path,
-      markdownUrl: getPageMarkdownUrl(page).url,
+      markdownUrl: `${page.url}.md`,
       imageUrl: getPageImageUrl(page).url,
       pageTree: await source.serializePageTree(source.getPageTree()),
     };
@@ -60,7 +60,7 @@ function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
         <MarkdownCopyButton markdownUrl={markdownUrl} />
         <ViewOptionsPopover
           markdownUrl={markdownUrl}
-          githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${path}`}
+          githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${encodeURI(path)}`}
         />
       </div>
       <DocsBody>
