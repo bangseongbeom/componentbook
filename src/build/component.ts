@@ -67,6 +67,7 @@ export async function getComponents(
     const component: ComponentInfo = {
       exportName,
       isDefault,
+      // TypeScript strips the indentation after a `<caption>`, the same as in VS Code hovers.
       examples: tags.flatMap((tag) => (tag.name === "example" && tag.text ? [tag.text] : [])),
       props: await getProps(project, signature, declaration),
     };
