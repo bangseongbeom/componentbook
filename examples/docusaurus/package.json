@@ -5,7 +5,9 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
-    "build": "docusaurus build",
+    "build": "componentbook build && docusaurus build",
+    "build-componentbook": "componentbook build",
+    "watch-componentbook": "componentbook watch",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
@@ -21,6 +23,7 @@
     "@mdx-js/react": "^3.0.0",
     "always": "^2.2.0",
     "clsx": "^2.0.0",
+    "componentbook": "workspace:*",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

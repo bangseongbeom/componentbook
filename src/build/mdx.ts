@@ -6,6 +6,7 @@ import { fromMarkdown } from "mdast-util-from-markdown";
 import { micromark } from "micromark";
 import { codeToHtml } from "shiki";
 
+import type { Framework } from "../config.js";
 import type { ComponentInfo } from "./component.js";
 import type { ComponentDoc } from "./index.js";
 import type { PropInfo } from "./props.js";
@@ -16,8 +17,8 @@ const endMarker = "{/* componentbook-end */}";
 export type WriteStatus = "created" | "updated" | "unchanged" | "skipped";
 
 /** Creates the MDX file, or replaces only its generated block. */
-export async function writeMDX(doc: ComponentDoc): Promise<WriteStatus> {
-  const block = await renderBlock(doc);
+export async function writeMDX(doc: ComponentDoc, framework: Framework): Promise<WriteStatus> {
+  const block = await renderBlock(doc, framework);
 
   let source: string;
   try {
@@ -53,7 +54,7 @@ function renderFrontmatter(doc: ComponentDoc): string {
 }
 
 /** Renders the generated block, from `startMarker` to `endMarker`. */
-async function renderBlock(doc: ComponentDoc): Promise<string> {
+async function renderBlock(doc: ComponentDoc, framework: Framework): Promise<string> {
   const lines = [startMarker, ""];
 
   const componentbookImports: string[] = [];
@@ -61,14 +62,14 @@ async function renderBlock(doc: ComponentDoc): Promise<string> {
   if (doc.components.some((component) => component.props.length > 0))
     componentbookImports.push("ComponentbookTypeTable");
   if (componentbookImports.length > 0)
-    lines.push(`import { ${componentbookImports.join(", ")} } from "componentbook/fumadocs";`);
+    lines.push(`import { ${componentbookImports.join(", ")} } from "componentbook/${framework}";`);
   lines.push(
     `import ${renderImportClause(doc.components)} from ${JSON.stringify(doc.relativeSpecifier)};`,
     "",
   );
 
   for (const component of doc.components)
-    lines.push(...(await renderComponentSection(doc, component)));
+    lines.push(...(await renderComponentSection(doc, component, framework)));
 
   lines.push(endMarker);
   return lines.join("\n");
@@ -105,6 +106,7 @@ function renderImportClause(components: ComponentInfo[]): string {
 async function renderComponentSection(
   doc: ComponentDoc,
   component: ComponentInfo,
+  framework: Framework,
 ): Promise<string[]> {
   const { exportName } = component;
   const lines = [`## ${exportName}`, ""];
@@ -138,7 +140,7 @@ async function renderComponentSection(
     );
   }
 
-  if (component.props.length > 0) lines.push(await renderTypeTable(component.props), "");
+  if (component.props.length > 0) lines.push(await renderTypeTable(component.props, framework), "");
 
   return lines;
 }
@@ -240,7 +242,7 @@ function renderChildren({ dummy }: PropInfo): string {
 }
 
 /** Renders the type table, with its code highlighted and its descriptions rendered at build time. */
-async function renderTypeTable(props: PropInfo[]): Promise<string> {
+async function renderTypeTable(props: PropInfo[], framework: Framework): Promise<string> {
   const entries = await Promise.all(
     props.map(async ({ name, remarks, ...prop }) => [
       name,
@@ -254,8 +256,9 @@ async function renderTypeTable(props: PropInfo[]): Promise<string> {
     ]),
   );
   const type = JSON.stringify(Object.fromEntries(entries), null, 2);
-  // `client:load` is for Astro. Without it, the table's rows can't be expanded.
-  return `<ComponentbookTypeTable client:load type={${type}} />`;
+  // `client:load` is for Astro with Fumadocs. Without it, the table's rows can't be expanded.
+  const directive = framework === "fumadocs" ? " client:load" : "";
+  return `<ComponentbookTypeTable${directive} type={${type}} />`;
 }
 
 function renderDescription(

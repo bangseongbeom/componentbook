@@ -4,18 +4,13 @@ import { styleText } from "node:util";
 
 import { debounce } from "perfect-debounce";
 
-import build from "./build/index.js";
+import build, { type BuildOptions } from "./build/index.js";
 
-export default async function ({
-  outputDir,
-  exclude,
-}: {
-  outputDir: string;
-  exclude: string[];
-}): Promise<void> {
+export default async function (options: BuildOptions): Promise<void> {
+  const { outputDir } = options;
   const rebuild = debounce(async () => {
     try {
-      await build({ outputDir, exclude });
+      await build(options);
     } catch (error) {
       console.error(styleText("red", "Failed to build components", { stream: process.stderr }));
       console.error(error instanceof Error ? error.message : String(error));

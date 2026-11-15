@@ -1,8 +1,9 @@
 import { dirname, relative, resolve } from "node:path";
 import { styleText } from "node:util";
 
-import { type ComponentInfo, getComponents } from "./component.js";
+import type { Framework } from "../config.js";
 import { componentRoots, scanComponentFiles } from "./component-file.js";
+import { type ComponentInfo, getComponents } from "./component.js";
 import { writeMDX, type WriteStatus } from "./mdx.js";
 import { getDisplaySpecifier, getRelativeSpecifier } from "./module-specifier.js";
 import { withProject } from "./project.js";
@@ -19,13 +20,13 @@ export interface ComponentDoc {
   components: ComponentInfo[];
 }
 
-export default async function ({
-  outputDir,
-  exclude,
-}: {
+export interface BuildOptions {
+  framework: Framework;
   outputDir: string;
   exclude: string[];
-}): Promise<void> {
+}
+
+export default async function ({ framework, outputDir, exclude }: BuildOptions): Promise<void> {
   const componentFiles = await scanComponentFiles(exclude);
   if (componentFiles.length === 0) {
     console.error(
@@ -104,7 +105,7 @@ export default async function ({
     skipped: 0,
   };
   const writeResults = await Promise.all(
-    docs.map(async (doc) => ({ doc, status: await writeMDX(doc) })),
+    docs.map(async (doc) => ({ doc, status: await writeMDX(doc, framework) })),
   );
   for (const { doc, status } of writeResults) {
     counts[status]++;

@@ -8,6 +8,7 @@
     "design-system",
     "docs",
     "documentation",
+    "docusaurus",
     "fumadocs",
     "mdx",
     "react"
@@ -23,6 +24,8 @@
   "bin": "dist/bin/componentbook.js",
   "type": "module",
   "exports": {
+    ".": "./dist/index.js",
+    "./docusaurus": "./dist/docusaurus/index.js",
     "./fumadocs": "./dist/fumadocs/index.js",
     "./css/*": "./css/*"
   },

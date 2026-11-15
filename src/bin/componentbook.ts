@@ -3,7 +3,7 @@ import { parseArgs } from "node:util";
 
 import packageConfig from "../../package.json" with { type: "json" };
 import build from "../build/index.js";
-import { loadConfig } from "../config.js";
+import { frameworks, isFramework, loadConfig } from "../config.js";
 import watch from "../watch.js";
 
 const [bin] = Object.keys(packageConfig.bin);
@@ -17,6 +17,9 @@ const { values, positionals } = parseArgs({
     help: {
       short: "h",
       type: "boolean",
+    },
+    framework: {
+      type: "string",
     },
     "output-dir": {
       short: "o",
@@ -49,7 +52,9 @@ const buildHelp = `Usage: ${bin} build [options]
 Build the Componentbook project
 
 Options:
-  -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components")
+      --framework <name>   documentation framework: ${frameworks.map((framework) => JSON.stringify(framework)).join(", ")} (default: "fumadocs")
+  -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components",
+                           or "docs/components" for Docusaurus)
       --exclude <pattern>  skip paths matching a glob pattern, e.g. "src/components/ui" (repeatable)
   -h, --help               display help for command`;
 
@@ -58,13 +63,15 @@ const watchHelp = `Usage: ${bin} watch [options]
 Build the Componentbook project and rebuild on changes
 
 Options:
-  -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components")
+      --framework <name>   documentation framework: ${frameworks.map((framework) => JSON.stringify(framework)).join(", ")} (default: "fumadocs")
+  -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components",
+                           or "docs/components" for Docusaurus)
       --exclude <pattern>  skip paths matching a glob pattern, e.g. "src/components/ui" (repeatable)
   -h, --help               display help for command`;
 
 const command = positionals[0];
 const config = await loadConfig();
-const outputDir = values["output-dir"] ?? config.outputDir ?? "content/docs/components";
+const framework = values.framework ?? config.framework ?? "fumadocs";
 const exclude = values.exclude ?? config.exclude ?? [];
 
 if (values.version) console.log(packageConfig.version);
@@ -81,9 +88,21 @@ else if (values.help)
     default:
       console.log(help);
   }
-else if (command === "build") await build({ outputDir, exclude });
-else if (command === "watch") await watch({ outputDir, exclude });
-else if (command === undefined) {
+else if (command === "build" || command === "watch") {
+  if (isFramework(framework)) {
+    const outputDir =
+      values["output-dir"] ??
+      config.outputDir ??
+      { fumadocs: "content/docs/components", docusaurus: "docs/components" }[framework];
+    if (command === "build") await build({ framework, outputDir, exclude });
+    else await watch({ framework, outputDir, exclude });
+  } else {
+    console.error(
+      `Unknown framework: ${framework} (expected ${frameworks.map((framework) => JSON.stringify(framework)).join(", ")})`,
+    );
+    process.exitCode = 1;
+  }
+} else if (command === undefined) {
   console.error(help);
   process.exitCode = 1;
 } else {
