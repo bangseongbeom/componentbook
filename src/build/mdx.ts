@@ -4,6 +4,7 @@ import { dirname } from "node:path";
 import MagicString from "magic-string";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { micromark } from "micromark";
+import { parseSync, type StaticImport } from "oxc-parser";
 import { codeToHtml } from "shiki";
 
 import type { Framework } from "../config.js";
@@ -63,16 +64,56 @@ async function renderBlock(doc: ComponentDoc, framework: Framework): Promise<str
     componentbookImports.push("ComponentbookTypeTable");
   if (componentbookImports.length > 0)
     lines.push(`import { ${componentbookImports.join(", ")} } from "componentbook/${framework}";`);
+
+  // The sections are rendered first, to collect the imports of their examples.
+  const sections: string[] = [];
+  const exampleImports: StaticImport[] = [];
+  for (const component of doc.components) {
+    const section = await renderComponentSection(doc, component, framework);
+    sections.push(...section.lines);
+    exampleImports.push(...section.exampleImports);
+  }
+
   lines.push(
     `import ${renderImportClause(doc.components)} from ${JSON.stringify(doc.relativeSpecifier)};`,
+    ...renderImports(doc, exampleImports),
     "",
+    ...sections,
+    endMarker,
   );
-
-  for (const component of doc.components)
-    lines.push(...(await renderComponentSection(doc, component, framework)));
-
-  lines.push(endMarker);
   return lines.join("\n");
+}
+
+function renderImports(doc: ComponentDoc, imports: StaticImport[]): string[] {
+  // The names imported from each module, like `a` and `b as c`.
+  const names = new Map<string, Set<string>>();
+  // Namespace and side-effect imports, which can't be merged with them.
+  const standaloneImports = new Set<string>();
+
+  for (const { moduleRequest, entries } of imports) {
+    const from = JSON.stringify(moduleRequest.value);
+    if (entries.length === 0) standaloneImports.add(`import ${from};`);
+
+    for (const { importName, localName, isType } of entries) {
+      const local = localName.value;
+      // Types are left out, because MDX is JavaScript.
+      // The components of the file are already imported.
+      if (isType || doc.components.some((component) => component.exportName === local)) continue;
+
+      const kind: string = importName.kind;
+      if (kind === "NamespaceObject") standaloneImports.add(`import * as ${local} from ${from};`);
+      else {
+        const imported = kind === "Default" ? "default" : (importName.name ?? local);
+        const name = imported === local ? local : `${imported} as ${local}`;
+        names.set(from, (names.get(from) ?? new Set<string>()).add(name));
+      }
+    }
+  }
+
+  const mergedImports = [...names].map(
+    ([from, moduleNames]) => `import { ${[...moduleNames].join(", ")} } from ${from};`,
+  );
+  return [...mergedImports, ...standaloneImports];
 }
 
 /** The default export, or the first component. */
@@ -97,15 +138,20 @@ async function renderComponentSection(
   doc: ComponentDoc,
   component: ComponentInfo,
   framework: Framework,
-): Promise<string[]> {
+): Promise<{ lines: string[]; exampleImports: StaticImport[] }> {
   const { exportName } = component;
   const lines = [`## ${exportName}`, ""];
+  const exampleImports: StaticImport[] = [];
 
   if (component.description) lines.push(escapeMDX(component.description), "");
   if (component.remarks) lines.push("**Remarks**", "", escapeMDX(component.remarks), "");
 
   if (component.examples.length > 0)
-    for (const example of component.examples) lines.push(...renderExample(doc, component, example));
+    for (const example of component.examples) {
+      const rendered = renderExample(doc, component, example);
+      lines.push(...rendered.lines);
+      exampleImports.push(...rendered.exampleImports);
+    }
   else {
     const requiredProps = getRequiredProps(component);
     const children = component.props.find((prop) => prop.name === "children" && prop.required);
@@ -132,35 +178,52 @@ async function renderComponentSection(
 
   if (component.props.length > 0) lines.push(await renderTypeTable(component.props, framework), "");
 
-  return lines;
+  return { lines, exampleImports };
 }
 
-/** Renders an `@example` with a preview. Non-JSX code blocks aren't previewed, and an example without a code fence is a single `tsx` block. */
-function renderExample(doc: ComponentDoc, component: ComponentInfo, text: string): string[] {
+/**
+ * Renders an `@example` with a preview.
+ * Non-JSX code blocks aren't previewed, and an example without a code fence is a single `tsx` block.
+ * The imports of a previewed block are left out of its preview, and returned as `exampleImports`.
+ */
+function renderExample(
+  doc: ComponentDoc,
+  component: ComponentInfo,
+  text: string,
+): { lines: string[]; exampleImports: StaticImport[] } {
   const caption = /^<caption>(.*?)<\/caption>\s*\n/.exec(text);
   const body = caption ? text.slice(caption[0].length) : text;
   const markdown =
     (caption ? `${caption[1]}\n\n` : "") +
     (/^\s*[`~]{3}/m.test(body) ? body : "```tsx\n" + body + "\n```");
 
-  return fromMarkdown(markdown).children.flatMap((node) => {
+  const exampleImports: StaticImport[] = [];
+  const lines = fromMarkdown(markdown).children.flatMap((node) => {
     const raw = markdown.slice(node.position?.start.offset, node.position?.end.offset);
     if (node.type !== "code") return [escapeMDX(raw), ""];
     if (node.lang && !["tsx", "jsx"].includes(node.lang)) return [raw, ""];
 
     const code = node.value;
+    // An example can have several root elements, like `<A /><B />`, so parse errors are ignored.
+    const { staticImports } = parseSync("example.tsx", code).module;
+    exampleImports.push(...staticImports);
+    // The offset in the code where the import declarations end.
+    const end = Math.max(0, ...staticImports.map(({ end }) => end));
     return [
       "<ComponentbookPreview>",
       // A fragment expression keeps MDX from parsing the JSX as Markdown.
       "  {<>",
       // Indents each line, except blank ones to avoid trailing whitespace.
-      ...code.split("\n").map((line) => (line === "" ? line : `    ${line}`)),
+      ...(end > 0 ? code.slice(end).trimStart() : code)
+        .split("\n")
+        .map((line) => (line === "" ? line : `    ${line}`)),
       "  </>}",
       "</ComponentbookPreview>",
       "",
       ...renderCodeBlock(doc, component, code),
     ];
   });
+  return { lines, exampleImports };
 }
 
 /** Required props excluding `children`, which is passed as element children. */
