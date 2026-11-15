@@ -3,7 +3,7 @@ import { parseArgs } from "node:util";
 
 import packageConfig from "../../package.json" with { type: "json" };
 import build from "../build/index.js";
-import { frameworks, isFramework, loadConfig } from "../config.js";
+import { detectFramework, frameworks, isFramework, loadConfig } from "../config.js";
 import watch from "../watch.js";
 
 const [bin] = Object.keys(packageConfig.bin);
@@ -33,6 +33,8 @@ const { values, positionals } = parseArgs({
   allowPositionals: true,
 });
 
+const frameworkNames = frameworks.map((framework) => JSON.stringify(framework)).join(", ");
+
 const help = `Usage: ${bin} [options] <command>
 
 ${packageConfig.description}
@@ -52,7 +54,8 @@ const buildHelp = `Usage: ${bin} build [options]
 Build the Componentbook project
 
 Options:
-      --framework <name>   documentation framework: ${frameworks.map((framework) => JSON.stringify(framework)).join(", ")} (default: "fumadocs")
+      --framework <name>   documentation framework: ${frameworkNames}
+                           (default: detected from the dependencies in package.json)
   -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components",
                            or "docs/components" for Docusaurus)
       --exclude <pattern>  skip paths matching a glob pattern, e.g. "src/components/ui" (repeatable)
@@ -63,7 +66,8 @@ const watchHelp = `Usage: ${bin} watch [options]
 Build the Componentbook project and rebuild on changes
 
 Options:
-      --framework <name>   documentation framework: ${frameworks.map((framework) => JSON.stringify(framework)).join(", ")} (default: "fumadocs")
+      --framework <name>   documentation framework: ${frameworkNames}
+                           (default: detected from the dependencies in package.json)
   -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components",
                            or "docs/components" for Docusaurus)
       --exclude <pattern>  skip paths matching a glob pattern, e.g. "src/components/ui" (repeatable)
@@ -71,7 +75,6 @@ Options:
 
 const command = positionals[0];
 const config = await loadConfig();
-const framework = values.framework ?? config.framework ?? "fumadocs";
 const exclude = values.exclude ?? config.exclude ?? [];
 
 if (values.version) console.log(packageConfig.version);
@@ -89,7 +92,13 @@ else if (values.help)
       console.log(help);
   }
 else if (command === "build" || command === "watch") {
-  if (isFramework(framework)) {
+  const framework = values.framework ?? config.framework ?? (await detectFramework());
+  if (framework === undefined) {
+    console.error(
+      `Cannot detect the documentation framework from package.json. Use --framework <name> or the "framework" config option (${frameworkNames})`,
+    );
+    process.exitCode = 1;
+  } else if (isFramework(framework)) {
     const outputDir =
       values["output-dir"] ??
       config.outputDir ??
@@ -97,9 +106,7 @@ else if (command === "build" || command === "watch") {
     if (command === "build") await build({ framework, outputDir, exclude });
     else await watch({ framework, outputDir, exclude });
   } else {
-    console.error(
-      `Unknown framework: ${framework} (expected ${frameworks.map((framework) => JSON.stringify(framework)).join(", ")})`,
-    );
+    console.error(`Unknown framework: ${framework} (expected ${frameworkNames})`);
     process.exitCode = 1;
   }
 } else if (command === undefined) {
