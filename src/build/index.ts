@@ -5,6 +5,7 @@ import type { Framework } from "../config.js";
 import { componentRoots, scanComponentFiles } from "./component-file.js";
 import { type ComponentInfo, getComponents } from "./component.js";
 import { writeMDX, type WriteStatus } from "./mdx.js";
+import { copyMeta } from "./meta.js";
 import { getDisplaySpecifier, getRelativeSpecifier } from "./module-specifier.js";
 import { withProject } from "./project.js";
 
@@ -105,12 +106,13 @@ export default async function ({ framework, outputDir, exclude }: BuildOptions):
     skipped: 0,
   };
   const writeResults = await Promise.all(
-    docs.map(async (doc) => ({ doc, status: await writeMDX(doc, framework) })),
+    docs.map(async (doc) => ({ path: doc.mdxPath, status: await writeMDX(doc, framework) })),
   );
-  for (const { doc, status } of writeResults) {
+  writeResults.push(...(await copyMeta(framework, outputDir, exclude)));
+  for (const { path, status } of writeResults) {
     counts[status]++;
 
-    const relativePath = relative(process.cwd(), doc.mdxPath);
+    const relativePath = relative(process.cwd(), path);
     if (status === "created" || status === "updated")
       console.log(styleText("green", `${status} ${relativePath}`));
     else if (status === "skipped")
