@@ -6,8 +6,7 @@ import { Component, type ReactNode } from "react";
 export function ComponentbookPreview({ children }: { children: ReactNode }): ReactNode {
   return (
     // `not-prose` disables `prose` inside the preview.
-    // `contain-paint` keeps absolute/fixed elements inside the frame.
-    <div className="not-prose rounded-xl border bg-fd-card p-6 text-fd-card-foreground contain-paint">
+    <div className="not-prose rounded-xl border bg-fd-card p-6 text-fd-card-foreground">
       <PreviewErrorBoundary>{children}</PreviewErrorBoundary>
     </div>
   );

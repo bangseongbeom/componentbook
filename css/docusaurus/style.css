@@ -2,7 +2,6 @@
   background-color: var(--ifm-card-background-color);
   border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-300);
   border-radius: var(--ifm-card-border-radius);
-  contain: paint; /* Keeps absolute/fixed elements inside the frame. */
   margin-bottom: var(--ifm-leading);
   padding: calc(var(--ifm-card-vertical-spacing) * 1.5)
     calc(var(--ifm-card-horizontal-spacing) * 1.5);
