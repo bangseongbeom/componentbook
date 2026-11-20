@@ -1,10 +1,14 @@
 import { join } from "node:path";
 
 import { API, Project } from "typescript/unstable/async";
+import type { FileSystem } from "typescript/unstable/fs";
 
-export async function withProject<T>(fn: (project: Project) => Promise<T>): Promise<T> {
+export async function withProject<T>(
+  fn: (project: Project) => Promise<T>,
+  fs?: FileSystem,
+): Promise<T> {
   const configFileName = join(process.cwd(), "tsconfig.json");
-  const api = new API();
+  const api = new API({ fs });
   try {
     const snapshot = await api.updateSnapshot({
       openProjects: [configFileName],

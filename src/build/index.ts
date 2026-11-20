@@ -2,6 +2,7 @@ import { dirname, relative, resolve } from "node:path";
 import { styleText } from "node:util";
 
 import type { Framework } from "../config.js";
+import { createAstroFileSystem, isAstroPath, toTypeScriptPath } from "./astro.js";
 import { componentRoots, scanComponentFiles } from "./component-file.js";
 import { type ComponentInfo, getComponents } from "./component.js";
 import { writeMDX, type WriteStatus } from "./mdx.js";
@@ -28,7 +29,8 @@ export interface BuildOptions {
 }
 
 export default async function ({ framework, outputDir, exclude }: BuildOptions): Promise<void> {
-  const componentFiles = await scanComponentFiles(exclude);
+  const extensions = framework === "starlight" ? ["tsx", "jsx", "astro"] : ["tsx", "jsx"];
+  const componentFiles = await scanComponentFiles(extensions, exclude);
   if (componentFiles.length === 0) {
     console.error(
       styleText("red", `No components found in ${componentRoots.join(", ")}`, {
@@ -43,11 +45,14 @@ export default async function ({ framework, outputDir, exclude }: BuildOptions):
 
   const docs: ComponentDoc[] = [];
   const excludedFiles: string[] = [];
+  const fs = await createAstroFileSystem(
+    componentFiles.map(({ absolutePath }) => absolutePath).filter(isAstroPath),
+  );
   try {
     await withProject(async (project) => {
       const results = await Promise.all(
         componentFiles.map(async ({ absolutePath, relativePath }) => {
-          const sourceFile = await project.program.getSourceFile(absolutePath);
+          const sourceFile = await project.program.getSourceFile(toTypeScriptPath(absolutePath));
           if (!sourceFile) return { absolutePath, relativePath };
           else
             return {
@@ -69,7 +74,7 @@ export default async function ({ framework, outputDir, exclude }: BuildOptions):
         const mdxPath = resolve(
           process.cwd(),
           outputDir,
-          relativePath.replace(/\.[jt]sx$/, ".mdx"),
+          relativePath.replace(/\.([jt]sx|astro)$/, ".mdx"),
         );
         docs.push({
           sourcePath,
@@ -79,7 +84,7 @@ export default async function ({ framework, outputDir, exclude }: BuildOptions):
           components,
         });
       }
-    });
+    }, fs);
   } catch (error) {
     console.error(styleText("red", "Failed to analyze components", { stream: process.stderr }));
     console.error(error instanceof Error ? error.message : String(error));

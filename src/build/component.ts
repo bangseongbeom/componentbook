@@ -18,6 +18,7 @@ import {
   type Type,
 } from "typescript/unstable/async";
 
+import { fromTypeScriptPath } from "./astro.js";
 import { getProps, type PropInfo } from "./props.js";
 
 export interface ComponentInfo {
@@ -38,6 +39,7 @@ export async function getComponents(
   const moduleSymbol = await checker.getSymbolAtLocation(sourceFile);
   if (!moduleSymbol) return [];
 
+  const fileName = fromTypeScriptPath(sourceFile.fileName);
   const components: ComponentInfo[] = [];
 
   for (const exportSymbol of await checker.getExportsOfModule(moduleSymbol)) {
@@ -52,8 +54,7 @@ export async function getComponents(
     const declaration = await symbol.valueDeclaration.resolve(project);
     const isDefault = exportSymbol.name === "default";
     const exportName = isDefault
-      ? (getDeclarationName(declaration) ??
-        toPascalCase(basename(sourceFile.fileName, extname(sourceFile.fileName))))
+      ? (getDeclarationName(declaration) ?? toPascalCase(basename(fileName, extname(fileName))))
       : exportSymbol.name;
     // Components are capitalized, unlike other functions.
     if (!/^[A-Z]/.test(exportName)) continue;

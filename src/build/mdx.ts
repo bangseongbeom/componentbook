@@ -8,6 +8,7 @@ import { parseSync, type StaticImport } from "oxc-parser";
 import { codeToHtml } from "shiki";
 
 import type { Framework } from "../config.js";
+import { isAstroPath, renderAstroCodeBlock, splitAstroExample } from "./astro.js";
 import type { ComponentInfo } from "./component.js";
 import type { ComponentDoc } from "./index.js";
 import type { PropInfo } from "./props.js";
@@ -181,42 +182,38 @@ async function renderComponentSection(
   return { lines, exampleImports };
 }
 
-/**
- * Renders an `@example` with a preview.
- * Non-JSX code blocks aren't previewed, and an example without a code fence is a single `tsx` block.
- * The imports of a previewed block are left out of its preview, and returned as `exampleImports`.
- */
 function renderExample(
   doc: ComponentDoc,
   component: ComponentInfo,
   text: string,
 ): { lines: string[]; exampleImports: StaticImport[] } {
+  const astro = isAstroPath(doc.sourcePath);
+  const defaultLang = astro ? "astro" : "tsx";
+  const previewLangs = astro ? ["tsx", "jsx", "astro"] : ["tsx", "jsx"];
   const caption = /^<caption>(.*?)<\/caption>\s*\n/.exec(text);
   const body = caption ? text.slice(caption[0].length) : text;
+  // An example without a code fence is a single code block.
   const markdown =
     (caption ? `${caption[1]}\n\n` : "") +
-    (/^\s*[`~]{3}/m.test(body) ? body : "```tsx\n" + body + "\n```");
+    (/^\s*[`~]{3}/m.test(body) ? body : "```" + defaultLang + "\n" + body + "\n```");
 
   const exampleImports: StaticImport[] = [];
   const lines = fromMarkdown(markdown).children.flatMap((node) => {
     const raw = markdown.slice(node.position?.start.offset, node.position?.end.offset);
     if (node.type !== "code") return [escapeMDX(raw), ""];
-    if (node.lang && !["tsx", "jsx"].includes(node.lang)) return [raw, ""];
+    if (node.lang && !previewLangs.includes(node.lang)) return [raw, ""];
 
     const code = node.value;
-    // An example can have several root elements, like `<A /><B />`, so parse errors are ignored.
-    const { staticImports } = parseSync("example.tsx", code).module;
-    exampleImports.push(...staticImports);
-    // The offset in the code where the import declarations end.
-    const end = Math.max(0, ...staticImports.map(({ end }) => end));
+    const { imports, markup } =
+      (node.lang ?? defaultLang) === "astro" ? splitAstroExample(code) : splitExample(code);
+    // Imports must be at the top level of the MDX file, not in the preview.
+    exampleImports.push(...imports);
     return [
       "<ComponentbookPreview>",
       // A fragment expression keeps MDX from parsing the JSX as Markdown.
       "  {<>",
       // Indents each line, except blank ones to avoid trailing whitespace.
-      ...(end > 0 ? code.slice(end).trimStart() : code)
-        .split("\n")
-        .map((line) => (line === "" ? line : `    ${line}`)),
+      ...markup.split("\n").map((line) => (line === "" ? line : `    ${line}`)),
       "  </>}",
       "</ComponentbookPreview>",
       "",
@@ -224,6 +221,14 @@ function renderExample(
     ];
   });
   return { lines, exampleImports };
+}
+
+function splitExample(code: string): { imports: StaticImport[]; markup: string } {
+  // An example can have several root elements, like `<A /><B />`, so parse errors are ignored.
+  const { staticImports } = parseSync("example.tsx", code).module;
+  // The offset in the code where the import declarations end.
+  const end = Math.max(0, ...staticImports.map(({ end }) => end));
+  return { imports: staticImports, markup: end > 0 ? code.slice(end).trimStart() : code };
 }
 
 /** Required props excluding `children`, which is passed as element children. */
@@ -240,14 +245,10 @@ function canPreview(component: ComponentInfo): boolean {
 
 function renderCodeBlock(doc: ComponentDoc, component: ComponentInfo, code: string): string[] {
   const components = getComponentsToImport(doc, component, code);
-  return [
-    "```tsx",
-    `import ${renderImportClause(components)} from ${JSON.stringify(doc.displaySpecifier)};`,
-    "",
-    code,
-    "```",
-    "",
-  ];
+  const declaration = `import ${renderImportClause(components)} from ${JSON.stringify(doc.displaySpecifier)};`;
+  return isAstroPath(doc.sourcePath)
+    ? renderAstroCodeBlock(declaration, code)
+    : ["```tsx", declaration, "", code, "```", ""];
 }
 
 /** Returns the target component, and the others used in the code. */
@@ -302,9 +303,9 @@ async function renderTypeTable(props: PropInfo[], framework: Framework): Promise
       {
         ...prop,
         description: renderDescription(prop.description, remarks),
-        type: await highlightCode(prop.type),
-        typeDescription: await highlightCode(prop.typeDescription),
-        default: prop.default && (await highlightCode(prop.default)),
+        type: await highlightCode(prop.type, framework),
+        typeDescription: await highlightCode(prop.typeDescription, framework),
+        default: prop.default && (await highlightCode(prop.default, framework)),
       },
     ]),
   );
@@ -324,10 +325,15 @@ function renderDescription(
   return lines.length > 0 ? micromark(lines.join("\n")) : undefined;
 }
 
-function highlightCode(code: string): Promise<string> {
+function highlightCode(code: string, framework: Framework): Promise<string> {
   return codeToHtml(code, {
     lang: "ts",
-    themes: { light: "github-light", dark: "github-dark" },
+    themes:
+      framework === "starlight"
+        ? // Starlight's default theme.
+          { light: "night-owl-light", dark: "night-owl" }
+        : // Fumadocs' default theme.
+          { light: "github-light", dark: "github-dark" },
     defaultColor: false,
     structure: "inline",
   });

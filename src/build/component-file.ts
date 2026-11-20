@@ -8,12 +8,15 @@ export interface ComponentFile {
   relativePath: string;
 }
 
-export async function scanComponentFiles(exclude: string[]): Promise<ComponentFile[]> {
+export async function scanComponentFiles(
+  extensions: string[],
+  exclude: string[],
+): Promise<ComponentFile[]> {
   const componentFiles: ComponentFile[] = [];
 
   for (const root of componentRoots) {
     const entries: string[] = [];
-    for await (const entry of glob(`${root}/**/*.{tsx,jsx}`, {
+    for await (const entry of glob(`${root}/**/*.{${extensions.join(",")}}`, {
       exclude: ["**/*.{test,spec,stories}.*", ...exclude],
     }))
       entries.push(entry);

@@ -24,6 +24,7 @@ import {
 import { createUnionTypeNode } from "typescript/unstable/ast/factory";
 import { Emitter, Project, Signature, SymbolFlags, type Type } from "typescript/unstable/async";
 
+import { findAstroPropsPattern } from "./astro.js";
 import { getDummy } from "./dummy.js";
 
 export interface PropInfo {
@@ -139,6 +140,7 @@ async function simplifyTypeNode(emitter: Emitter, node: TypeNode): Promise<strin
 
 type FunctionLike = FunctionDeclaration | ArrowFunction | FunctionExpression;
 
+/** Finds the function of a component, like `function Button({ variant = "default" })`. */
 function findFunction(node: Node): FunctionLike | undefined {
   if (isFunctionDeclaration(node) || isArrowFunction(node) || isFunctionExpression(node))
     return node;
@@ -153,13 +155,21 @@ function findFunction(node: Node): FunctionLike | undefined {
   return undefined;
 }
 
-/** Reads defaults like `variant = "default"` from `function Button({ variant = "default" })`. */
+/**
+ * Reads defaults like `variant = "default"` from `function Button({ variant = "default" })`,
+ * or from `const { variant = "default" } = Astro.props` in the frontmatter of an Astro component.
+ */
 function getPropDefaults(declaration: Node | undefined): Map<string, string> {
   const defaults = new Map<string, string>();
-  const parameter = declaration && findFunction(declaration)?.parameters[0];
-  if (!parameter || !isObjectBindingPattern(parameter.name)) return defaults;
+  if (!declaration) return defaults;
+  const parameter = findFunction(declaration)?.parameters[0];
+  const pattern =
+    parameter && isObjectBindingPattern(parameter.name)
+      ? parameter.name
+      : findAstroPropsPattern(declaration.getSourceFile());
+  if (!pattern) return defaults;
 
-  for (const element of parameter.name.elements) {
+  for (const element of pattern.elements) {
     const key = element.propertyName ?? element.name;
     if (element.dotDotDotToken || !element.initializer || !key || !isPropertyNameLiteral(key))
       continue;
