@@ -11,6 +11,9 @@ export async function copyMeta(
   outputDir: string,
   exclude: string[],
 ): Promise<{ path: string; status: WriteStatus }[]> {
+  // Starlight has no folder meta. Its sidebar is configured in `astro.config.mjs` and the frontmatter.
+  if (framework === "starlight") return [];
+
   const results = [];
 
   for (const root of componentRoots) {

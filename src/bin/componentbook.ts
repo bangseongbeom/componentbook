@@ -57,7 +57,8 @@ Options:
       --framework <name>   documentation framework: ${frameworkNames}
                            (default: detected from the dependencies in package.json)
   -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components",
-                           or "docs/components" for Docusaurus)
+                           "docs/components" for Docusaurus,
+                           or "src/content/docs/components" for Starlight)
       --exclude <pattern>  skip paths matching a glob pattern, e.g. "src/components/ui" (repeatable)
   -h, --help               display help for command`;
 
@@ -69,7 +70,8 @@ Options:
       --framework <name>   documentation framework: ${frameworkNames}
                            (default: detected from the dependencies in package.json)
   -o, --output-dir <dir>   output directory for MDX files (default: "content/docs/components",
-                           or "docs/components" for Docusaurus)
+                           "docs/components" for Docusaurus,
+                           or "src/content/docs/components" for Starlight)
       --exclude <pattern>  skip paths matching a glob pattern, e.g. "src/components/ui" (repeatable)
   -h, --help               display help for command`;
 
@@ -102,7 +104,11 @@ else if (command === "build" || command === "watch") {
     const outputDir =
       values["output-dir"] ??
       config.outputDir ??
-      { fumadocs: "content/docs/components", docusaurus: "docs/components" }[framework];
+      {
+        fumadocs: "content/docs/components",
+        docusaurus: "docs/components",
+        starlight: "src/content/docs/components",
+      }[framework];
     if (command === "build") await build({ framework, outputDir, exclude });
     else await watch({ framework, outputDir, exclude });
   } else {

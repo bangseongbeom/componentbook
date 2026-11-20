@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 
-export const frameworks = ["fumadocs", "docusaurus"] as const;
+export const frameworks = ["fumadocs", "docusaurus", "starlight"] as const;
 
 export type Framework = (typeof frameworks)[number];
 
@@ -12,6 +12,7 @@ export function isFramework(framework: string): framework is Framework {
 const frameworkPackages: Record<Framework, string[]> = {
   fumadocs: ["fumadocs-ui", "fumadocs-core"],
   docusaurus: ["@docusaurus/core"],
+  starlight: ["@astrojs/starlight"],
 };
 
 export async function detectFramework(): Promise<Framework | undefined> {

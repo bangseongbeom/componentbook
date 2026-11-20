@@ -11,7 +11,8 @@
     "docusaurus",
     "fumadocs",
     "mdx",
-    "react"
+    "react",
+    "starlight"
   ],
   "homepage": "https://github.com/bangseongbeom/componentbook",
   "bugs": "https://github.com/bangseongbeom/componentbook/issues",
@@ -27,6 +28,7 @@
     ".": "./dist/index.js",
     "./docusaurus": "./dist/docusaurus/index.js",
     "./fumadocs": "./dist/fumadocs/index.js",
+    "./starlight": "./dist/starlight/index.js",
     "./css/*": "./css/*"
   },
   "scripts": {
@@ -34,7 +36,7 @@
     "fmt:check": "oxfmt --check",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "prepack": "tsc",
+    "prepack": "tsc && cp src/starlight/*.astro dist/starlight/",
     "test": "node --test",
     "types:check": "tsc --noEmit"
   },
@@ -59,12 +61,20 @@
     "tailwindcss": "^4.3.3"
   },
   "peerDependencies": {
+    "@astrojs/starlight": ">=0.41.0",
+    "astro": "^7.0.0",
     "fumadocs-ui": "npm:@fumadocs/base-ui@^16.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.0.0"
   },
   "peerDependenciesMeta": {
+    "@astrojs/starlight": {
+      "optional": true
+    },
+    "astro": {
+      "optional": true
+    },
     "fumadocs-ui": {
       "optional": true
     },

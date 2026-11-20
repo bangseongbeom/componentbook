@@ -1,0 +1,201 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+
+/** A prop, with its code highlighted and its description rendered at build time as HTML strings. */
+interface TypeNode {
+  description?: string;
+  type: string;
+  typeDescription?: string;
+  default?: string;
+  required?: boolean;
+  deprecated?: boolean;
+}
+
+interface Props {
+  type: Record<string, TypeNode>;
+}
+
+const { type } = Astro.props;
+---
+
+<div class="componentbook-type-table">
+  <div class="header not-content">
+    <span class="name">Prop</span>
+    <span class="type">Type</span>
+  </div>
+  {
+    Object.entries(type).map(([name, node]) => (
+      <details>
+        <summary class="not-content">
+          <code class:list={["name", { deprecated: node.deprecated }]}>
+            {node.required ? name : `${name}?`}
+          </code>
+          <code class="type shiki" set:html={node.type} />
+          <Icon name="right-caret" class="caret" size="1.25rem" />
+        </summary>
+        <div class="content">
+          {node.description && <div class="description" set:html={node.description} />}
+          {(node.typeDescription || node.default) && (
+            <dl class="not-content">
+              {node.typeDescription && (
+                <>
+                  <dt>Type</dt>
+                  <dd>
+                    <code class="shiki" set:html={node.typeDescription} />
+                  </dd>
+                </>
+              )}
+              {node.default && (
+                <>
+                  <dt>Default</dt>
+                  <dd>
+                    <code class="shiki" set:html={node.default} />
+                  </dd>
+                </>
+              )}
+            </dl>
+          )}
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  @layer starlight, componentbook;
+
+  @layer componentbook {
+    .componentbook-type-table {
+      container-type: inline-size;
+      font-size: var(--sl-text-sm);
+    }
+
+    .header,
+    summary {
+      display: flex;
+      align-items: baseline;
+      padding-block: 0.5rem;
+    }
+
+    .header {
+      border-bottom: 1px solid var(--sl-color-gray-5);
+      color: var(--sl-color-white);
+      font-weight: 600;
+    }
+
+    /* Resets Starlight's default styles for `<details>`. */
+    details {
+      margin-top: 0;
+      border: 0;
+      border-bottom: 1px solid var(--sl-color-gray-5);
+      padding: 0;
+    }
+
+    /* Resets Starlight's default styles for `<summary>`. */
+    summary {
+      margin: 0;
+      padding-inline: 0;
+      color: inherit;
+      font-weight: inherit;
+      outline-offset: 0.25rem;
+      cursor: pointer;
+    }
+    summary::marker,
+    summary::-webkit-details-marker {
+      display: none;
+    }
+    summary::before {
+      content: none;
+    }
+
+    code {
+      font-size: var(--sl-text-code);
+    }
+
+    .name {
+      flex-shrink: 0;
+      width: 30%;
+      min-width: fit-content;
+      padding-inline-end: 1rem;
+    }
+    code.name {
+      color: var(--sl-color-text-accent);
+      font-weight: 600;
+    }
+    code.deprecated {
+      color: var(--sl-color-gray-3);
+      text-decoration: line-through;
+    }
+
+    .type {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .shiki {
+      white-space: pre-wrap;
+    }
+    .shiki :global(span[style^="--"]) {
+      color: var(--shiki-dark, inherit);
+      font-style: var(--shiki-dark-font-style, inherit);
+      font-weight: var(--shiki-dark-font-weight, inherit);
+      text-decoration: var(--shiki-dark-text-decoration, inherit);
+    }
+    :global(:root[data-theme="light"]) .shiki :global(span[style^="--"]) {
+      color: var(--shiki-light, inherit);
+      font-style: var(--shiki-light-font-style, inherit);
+      font-weight: var(--shiki-light-font-weight, inherit);
+      text-decoration: var(--shiki-light-text-decoration, inherit);
+    }
+
+    .caret {
+      flex-shrink: 0;
+      align-self: center;
+      margin-inline-start: auto;
+      color: var(--sl-color-gray-3);
+    }
+    summary:hover .caret {
+      color: var(--sl-color-white);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .caret {
+        transition: transform 0.2s ease-in-out;
+      }
+    }
+    :global([dir="rtl"]) .caret {
+      transform: rotateZ(180deg);
+    }
+    [open] > summary .caret {
+      transform: rotateZ(90deg);
+    }
+
+    .content {
+      margin-top: 0;
+      padding-block: 0.5rem 1rem;
+    }
+
+    dl {
+      display: grid;
+      /* Matches the width of `.name`, so the values align with the Type column. */
+      grid-template-columns: 30% 1fr;
+      align-items: baseline;
+      row-gap: 0.5rem;
+    }
+    .description + dl {
+      margin-top: var(--sl-content-gap-y);
+    }
+    dt {
+      padding-inline-end: 1rem;
+      color: var(--sl-color-gray-3);
+    }
+    dd {
+      min-width: 0;
+    }
+
+    @container (max-width: 28rem) {
+      .type {
+        display: none;
+      }
+    }
+  }
+</style>

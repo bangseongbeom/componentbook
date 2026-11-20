@@ -5,13 +5,16 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "componentbook build && astro build",
+    "build-componentbook": "componentbook build",
+    "watch-componentbook": "componentbook watch",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.43.1",
     "astro": "^7.3.6",
+    "componentbook": "workspace:*",
     "sharp": "^0.35.3"
   }
 }
