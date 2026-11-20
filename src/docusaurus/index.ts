@@ -1,4 +1,4 @@
-import "../../css/docusaurus/style.css";
+import "./style.css";
 
 export * from "./preview.js";
 export * from "./type-table.js";

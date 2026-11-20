@@ -28,15 +28,15 @@
     ".": "./dist/index.js",
     "./docusaurus": "./dist/docusaurus/index.js",
     "./fumadocs": "./dist/fumadocs/index.js",
-    "./starlight": "./dist/starlight/index.js",
-    "./css/*": "./css/*"
+    "./fumadocs/preset.css": "./dist/fumadocs/preset.css",
+    "./starlight": "./dist/starlight/index.js"
   },
   "scripts": {
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "prepack": "tsc && cp src/starlight/*.astro dist/starlight/",
+    "prepack": "tsc && cp src/fumadocs/preset.css dist/fumadocs/ && cp src/docusaurus/style.css dist/docusaurus/ && cp src/starlight/*.astro dist/starlight/",
     "test": "node --test",
     "types:check": "tsc --noEmit"
   },
