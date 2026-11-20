@@ -1,4 +1,4 @@
-import "./style.css";
+import "./styles.css";
 
 export * from "./preview.js";
 export * from "./type-table.js";
