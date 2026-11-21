@@ -36,7 +36,7 @@
     "fmt:check": "oxfmt --check",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "prepack": "tsc && cp src/fumadocs/preset.css dist/fumadocs/ && cp src/docusaurus/styles.css dist/docusaurus/ && cp src/starlight/*.astro dist/starlight/",
+    "prepack": "rm -rf dist && tsc && cp src/fumadocs/preset.css dist/fumadocs/ && cp src/docusaurus/styles.css dist/docusaurus/ && cp src/starlight/*.astro dist/starlight/",
     "test": "node --test",
     "types:check": "tsc --noEmit"
   },
