@@ -1,0 +1,86 @@
+---
+/**
+ * To display secondary information alongside a page’s main content, use the `<Aside>` component.
+ *
+ * @example
+ * ```astro
+ * <Aside>
+ *   Include nonessential, supplementary information in an <code>&lt;Aside&gt;</code>.
+ * </Aside>
+ * ```
+ *
+ * @example
+ * ### Usage
+ *
+ * Display an aside (also known as “admonitions” or “callouts”) using the `<Aside>` component.
+ *
+ * An `<Aside>` can have an optional `type` attribute, which controls the aside’s color, icon, and default title.
+ *
+ * ```astro
+ * ---
+ * import Code from "@/components/code.astro";
+ * ---
+ *
+ * <Aside>Some content in an aside.</Aside>
+ *
+ * <Aside type="caution">Some cautionary content.</Aside>
+ *
+ * <Aside type="tip">
+ *   <p>Other content is also supported in asides.</p>
+ *   <Code code="// A code snippet, for example." lang="js" />
+ * </Aside>
+ *
+ * <Aside type="danger">Do not give your password to anyone.</Aside>
+ * ```
+ *
+ * Starlight also provides a custom syntax for rendering asides in Markdown and MDX as an alternative to the `<Aside>` component.
+ * See the [“Authoring Content in Markdown”](https://starlight.astro.build/guides/authoring-content/#asides) guide for details of the custom syntax.
+ *
+ * @example
+ * #### Use custom titles
+ *
+ * Override the default aside titles by using the `title` attribute.
+ *
+ * ```astro
+ * <Aside type="caution" title="Watch out!">
+ *   A warning aside <em>with</em> a custom title.
+ * </Aside>
+ * ```
+ *
+ * @example
+ * #### Use custom icons
+ *
+ * Override the default aside icons by using the `icon` attribute set to the name of [one of Starlight’s built-in icons](https://starlight.astro.build/reference/icons/#all-icons).
+ *
+ * ```astro
+ * <Aside type="tip" icon="starlight">
+ *   A tip aside <em>with</em> a custom icon.
+ * </Aside>
+ * ```
+ */
+import { Aside } from "@astrojs/starlight/components";
+import type { StarlightIcon } from "@astrojs/starlight/types";
+
+interface Props {
+  /**
+   * The type of aside to display:
+   *
+   * - `note` asides (the default) are blue and display an information icon.
+   * - `tip` asides are purple and display a rocket icon.
+   * - `caution` asides are yellow and display a triangular warning icon.
+   * - `danger` asides are red and display an octagonal warning icon.
+   */
+  type?: "note" | "tip" | "caution" | "danger";
+  /**
+   * The title of the aside to display.
+   * If `title` is not set, the default title for the current aside `type` will be used.
+   */
+  title?: string;
+  /** An aside can include an `icon` attribute set to the name of [one of Starlight’s built-in icons](https://starlight.astro.build/reference/icons/#all-icons). */
+  icon?: StarlightIcon;
+}
+
+const { type = "note", ...props } = Astro.props;
+---
+
+<Aside type={type} {...props}><slot /></Aside>

@@ -1,0 +1,91 @@
+---
+/**
+ * To wrap multiple [`<Card>`](/components/card/) or [`<LinkCard>`](/components/link-card/) components in a grid, use the `<CardGrid>` component.
+ *
+ * @example
+ * ```astro
+ * ---
+ * import Card from "@/components/card.astro";
+ * ---
+ *
+ * <CardGrid>
+ *   <Card title="Stars" icon="star">
+ *     Sirius, Vega, Betelgeuse
+ *   </Card>
+ *   <Card title="Moons" icon="moon">
+ *     Io, Europa, Ganymede
+ *   </Card>
+ * </CardGrid>
+ * ```
+ *
+ * @example
+ * ### Usage
+ *
+ * #### Group cards
+ *
+ * Display multiple [`<Card>`](/components/card/) components side-by-side when there’s enough space by grouping them using the `<CardGrid>` component.
+ *
+ * ```astro
+ * ---
+ * import Card from "@/components/card.astro";
+ * ---
+ *
+ * <CardGrid>
+ *   <Card title="Check this out" icon="open-book">
+ *     Interesting content you want to highlight.
+ *   </Card>
+ *   <Card title="Other feature" icon="information">
+ *     More information you want to share.
+ *   </Card>
+ * </CardGrid>
+ * ```
+ *
+ * @example
+ * #### Group link cards
+ *
+ * Display multiple [`<LinkCard>`](/components/link-card/) components side-by-side when there’s enough space by grouping them using the `<CardGrid>` component.
+ *
+ * ```astro
+ * ---
+ * import LinkCard from "@/components/link-card.astro";
+ * ---
+ *
+ * <CardGrid>
+ *   <LinkCard title="Authoring Markdown" href="/guides/authoring-content/" />
+ *   <LinkCard title="Components" href="/components/using-components/" />
+ * </CardGrid>
+ * ```
+ *
+ * @example
+ * #### Stagger cards
+ *
+ * Shift the second column of the grid vertically to add visual interest by adding the `stagger` attribute to the `<CardGrid>` component.
+ *
+ * This attribute is useful on your home page to display your project’s key features.
+ *
+ * ```astro
+ * ---
+ * import Card from "@/components/card.astro";
+ * ---
+ *
+ * <CardGrid stagger>
+ *   <Card title="Check this out" icon="open-book">
+ *     Interesting content you want to highlight.
+ *   </Card>
+ *   <Card title="Other feature" icon="information">
+ *     More information you want to share.
+ *   </Card>
+ * </CardGrid>
+ * ```
+ */
+import { CardGrid } from "@astrojs/starlight/components";
+
+interface Props {
+  /** Defines whether to stagger the cards in the grid or not. */
+  stagger?: boolean;
+}
+
+const { stagger = false } = Astro.props;
+---
+
+<CardGrid stagger={stagger}><slot /></CardGrid>

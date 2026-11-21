@@ -1,0 +1,67 @@
+---
+/**
+ * To display visually distinct call-to-action links, use the `<LinkButton>` component.
+ *
+ * @example
+ * ```astro
+ * <LinkButton href="/getting-started/">
+ *   Read the docs
+ * </LinkButton>
+ * ```
+ *
+ * @example
+ * ### Usage
+ *
+ * Use the `<LinkButton>` component to display a visually distinct call-to-action link.
+ * A link button is useful for directing users to the most relevant or actionable content and is often used on landing pages.
+ *
+ * A `<LinkButton>` requires an `href` attribute.
+ * Optionally, customize the appearance of the link button using the `variant` attribute, which can be set to `primary` (the default), `secondary`, or `minimal`.
+ *
+ * ```astro
+ * <LinkButton href="/getting-started/">Get started</LinkButton>
+ * <LinkButton href="/reference/configuration/" variant="secondary">
+ *   Configuration Reference
+ * </LinkButton>
+ * ```
+ *
+ * @example
+ * #### Add icons to link buttons
+ *
+ * Include an icon in a link button using the `icon` attribute set to the name of [one of Starlight’s built-in icons](https://starlight.astro.build/reference/icons/#all-icons).
+ *
+ * The `iconPlacement` attribute can be used to place the icon before the text by setting it to `start` (defaults to `end`).
+ *
+ * ```astro
+ * <LinkButton
+ *   href="https://docs.astro.build"
+ *   variant="secondary"
+ *   icon="external"
+ *   iconPlacement="start"
+ * >
+ *   Related: Astro
+ * </LinkButton>
+ * ```
+ */
+import { LinkButton } from "@astrojs/starlight/components";
+import type { StarlightIcon } from "@astrojs/starlight/types";
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends Omit<HTMLAttributes<"a">, "href"> {
+  /** The URL that the link button points to. */
+  href: string | URL;
+  /**
+   * The appearance of the link button.
+   * Set to `primary` for a prominent call-to-action link using the theme’s accent color, `secondary` for a less prominent link, or `minimal` for a link with minimal styling.
+   */
+  variant?: "primary" | "secondary" | "minimal";
+  /** A link button can include an `icon` attribute set to the name of [one of Starlight’s built-in icons](https://starlight.astro.build/reference/icons/#all-icons). */
+  icon?: StarlightIcon;
+  /** Determines the placement of the icon in relation to the link button text. */
+  iconPlacement?: "start" | "end";
+}
+
+const { variant = "primary", iconPlacement = "end", ...props } = Astro.props;
+---
+
+<LinkButton variant={variant} iconPlacement={iconPlacement} {...props}><slot /></LinkButton>

@@ -1,0 +1,93 @@
+---
+/**
+ * To create a tabbed interface use the `<Tabs>` and `<TabItem>` components.
+ * Tabs are useful for grouping equivalent information where a user only needs to see one of several options.
+ *
+ * @example
+ * ```astro
+ * ---
+ * import TabItem from "@/components/tab-item.astro";
+ * ---
+ *
+ * <Tabs>
+ *   <TabItem label="Stars">Sirius, Vega, Betelgeuse</TabItem>
+ *   <TabItem label="Moons">Io, Europa, Ganymede</TabItem>
+ * </Tabs>
+ * ```
+ *
+ * @example
+ * ### Usage
+ *
+ * Display a tabbed interface using the `<Tabs>` and `<TabItem>` components.
+ * Each `<TabItem>` must have a `label` to display to users.
+ *
+ * ```astro
+ * ---
+ * import TabItem from "@/components/tab-item.astro";
+ * ---
+ *
+ * <Tabs>
+ *   <TabItem label="Stars">Sirius, Vega, Betelgeuse</TabItem>
+ *   <TabItem label="Moons">Io, Europa, Ganymede</TabItem>
+ * </Tabs>
+ * ```
+ *
+ * @example
+ * #### Sync tabs
+ *
+ * Keep multiple tab groups synchronized by adding the `syncKey` attribute.
+ *
+ * All `<Tabs>` on a page with the same `syncKey` value will display the same active label.
+ * This allows your reader to choose once (e.g. their operating system or package manager), and see their choice persisted across page navigations.
+ *
+ * To synchronize related tabs, add an identical `syncKey` property to each `<Tabs>` component and ensure that they all use the same `<TabItem>` labels:
+ *
+ * ```astro
+ * ---
+ * import TabItem from "@/components/tab-item.astro";
+ * ---
+ *
+ * <p><em>Some stars:</em></p>
+ *
+ * <Tabs syncKey="constellations">
+ *   <TabItem label="Orion">Bellatrix, Rigel, Betelgeuse</TabItem>
+ *   <TabItem label="Gemini">Pollux, Castor A, Castor B</TabItem>
+ * </Tabs>
+ *
+ * <p><em>Some exoplanets:</em></p>
+ *
+ * <Tabs syncKey="constellations">
+ *   <TabItem label="Orion">HD 34445 b, Gliese 179 b, Wasp-82 b</TabItem>
+ *   <TabItem label="Gemini">Pollux b, HAT-P-24b, HD 50554 b</TabItem>
+ * </Tabs>
+ * ```
+ *
+ * @example
+ * #### Add icons to tabs
+ *
+ * Include an icon in a tab item using the `icon` attribute set to the name of [one of Starlight’s built-in icons](https://starlight.astro.build/reference/icons/#all-icons) to display an icon next to the label.
+ *
+ * ```astro
+ * ---
+ * import TabItem from "@/components/tab-item.astro";
+ * ---
+ *
+ * <Tabs>
+ *   <TabItem label="Stars" icon="star">
+ *     Sirius, Vega, Betelgeuse
+ *   </TabItem>
+ *   <TabItem label="Moons" icon="moon">
+ *     Io, Europa, Ganymede
+ *   </TabItem>
+ * </Tabs>
+ * ```
+ */
+import { Tabs } from "@astrojs/starlight/components";
+
+interface Props {
+  /** A key used to keep multiple tab groups synchronized across multiple pages. */
+  syncKey?: string;
+}
+---
+
+<Tabs {...Astro.props}><slot /></Tabs>

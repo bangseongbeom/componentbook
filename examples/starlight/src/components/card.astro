@@ -1,0 +1,48 @@
+---
+/**
+ * To display content in a box matching Starlight’s styles, use the `<Card>` component.
+ *
+ * @example
+ * ```astro
+ * <Card title="Moons" icon="moon">
+ *   Io, Europa, Ganymede
+ * </Card>
+ * ```
+ *
+ * @example
+ * ### Usage
+ *
+ * Display a card using the `<Card>` component and provide a `title` for the card.
+ *
+ * ```astro
+ * <Card title="Check this out">Interesting content you want to highlight.</Card>
+ * ```
+ *
+ * @example
+ * #### Add icons to cards
+ *
+ * Include an icon in a card using the `icon` attribute set to the name of [one of Starlight’s built-in icons](https://starlight.astro.build/reference/icons/#all-icons).
+ *
+ * ```astro
+ * <Card title="Stars" icon="star">
+ *   Sirius, Vega, Betelgeuse
+ * </Card>
+ * ```
+ *
+ * #### Group cards
+ *
+ * Display multiple cards side-by-side when there’s enough space by grouping them using the [`<CardGrid>`](/components/card-grid/) component.
+ * See the [“Group cards”](/components/card-grid/#group-cards) guide for an example.
+ */
+import { Card } from "@astrojs/starlight/components";
+import type { StarlightIcon } from "@astrojs/starlight/types";
+
+interface Props {
+  /** The title of the card to display. */
+  title: string;
+  /** A card can include an `icon` attribute set to the name of [one of Starlight’s built-in icons](https://starlight.astro.build/reference/icons/#all-icons). */
+  icon?: StarlightIcon;
+}
+---
+
+<Card {...Astro.props}><slot /></Card>

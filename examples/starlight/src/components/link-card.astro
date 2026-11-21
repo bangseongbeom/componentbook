@@ -1,0 +1,55 @@
+---
+/**
+ * To display links to different pages prominently, use the `<LinkCard>` component.
+ *
+ * @example
+ * ```astro
+ * <LinkCard
+ *   title="Customizing Starlight"
+ *   description="Learn how to make your Starlight site your own with custom styles, fonts, and more."
+ *   href="/guides/customization/"
+ * />
+ * ```
+ *
+ * @example
+ * ### Usage
+ *
+ * Display a link prominently using the `<LinkCard>` component.
+ * Each `<LinkCard>` requires a `title` and an `href` attribute.
+ *
+ * ```astro
+ * <LinkCard title="Authoring Markdown" href="/guides/authoring-content/" />
+ * ```
+ *
+ * @example
+ * #### Add a link description
+ *
+ * Add a short description to a link card using the `description` attribute.
+ *
+ * ```astro
+ * <LinkCard
+ *   title="Internationalization"
+ *   href="/guides/i18n/"
+ *   description="Configure Starlight to support multiple languages."
+ * />
+ * ```
+ *
+ * #### Group link cards
+ *
+ * Display multiple link cards side-by-side when there’s enough space by grouping them using the [`<CardGrid>`](/components/card-grid/) component.
+ * See the [“Group link cards”](/components/card-grid/#group-link-cards) guide for an example.
+ */
+import { LinkCard } from "@astrojs/starlight/components";
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends Omit<HTMLAttributes<"a">, "title" | "href"> {
+  /** The title of the link card to display. */
+  title: string;
+  /** The URL to link to when the card is interacted with. */
+  href: string;
+  /** An optional description to display below the title. */
+  description?: string;
+}
+---
+
+<LinkCard {...Astro.props} />

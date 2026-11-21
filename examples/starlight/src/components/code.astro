@@ -1,0 +1,101 @@
+---
+/**
+ * The `<Code>` component renders syntax highlighted code.
+ * It is useful when using a [Markdown code block](https://starlight.astro.build/guides/authoring-content/#code-blocks) is not possible, for example, to render data coming from external sources like files, databases, or APIs.
+ *
+ * @example
+ * ```astro
+ * <Code
+ *   code={`## Welcome
+ *
+ * Hello from **space**!`}
+ *   lang="md"
+ *   title="example.md"
+ *   ins={3}
+ * />
+ * ```
+ *
+ * @example
+ * ### Usage
+ *
+ * Use the `<Code>` component to render syntax highlighted code, for example when displaying code fetched from external sources.
+ *
+ * See the [Expressive Code “Code Component” docs](https://expressive-code.com/key-features/code-component/) for full details on how to use the `<Code>` component and the list of available props.
+ *
+ * ```astro
+ * <Code
+ *   code={`console.log('This could come from a file or CMS!');`}
+ *   lang="js"
+ *   title="example.js"
+ *   mark={['file', 'CMS']}
+ * />
+ * ```
+ *
+ * @example
+ * #### Display imported code
+ *
+ * In MDX files and Astro components, use [Vite’s `?raw` import suffix](https://vite.dev/guide/assets#importing-asset-as-string) to import any code file as a string.
+ * You can then pass this imported string to the `<Code>` component to include it on your page.
+ *
+ * ```astro
+ * ---
+ * import importedCode from "/tsconfig.json?raw";
+ * ---
+ *
+ * <Code code={importedCode} lang="json" title="tsconfig.json" />
+ * ```
+ */
+import { Code } from "@astrojs/starlight/components";
+
+type MarkerLineOrRange = number | { range: string; label?: string | undefined };
+
+/**
+ * A single text marker definition that can be used in the `mark`, `ins`, and `del` props
+ * to define text and line markers.
+ */
+type MarkerDefinition = string | RegExp | MarkerLineOrRange;
+
+interface Props {
+  /** The plaintext contents of the code block. */
+  code: string;
+  /**
+   * The code block's language.
+   *
+   * Please use a valid [language identifier](https://expressive-code.com/key-features/syntax-highlighting/#supported-languages)
+   * to ensure proper syntax highlighting.
+   */
+  lang?: string;
+  /**
+   * The code block's title. For terminal frames, this is displayed as the terminal window title,
+   * and for code frames, it's displayed as the file name in an open file tab.
+   *
+   * If no title is given, the plugin will try to automatically extract a title from a
+   * [file name comment](https://expressive-code.com/key-features/frames/#file-name-comments)
+   * inside your code, unless disabled by the `extractFileNameFromCode` option.
+   */
+  title?: string;
+  /**
+   * Defines the code block's [text & line markers](https://expressive-code.com/key-features/text-markers/)
+   * of the default neutral type.
+   *
+   * You can either pass a single marker definition or an array of them.
+   */
+  mark?: MarkerDefinition | MarkerDefinition[];
+  /**
+   * Defines the code block's [text & line markers](https://expressive-code.com/key-features/text-markers/)
+   * of the "inserted" type.
+   *
+   * You can either pass a single marker definition or an array of them.
+   */
+  ins?: MarkerDefinition | MarkerDefinition[];
+  /**
+   * Defines the code block's [text & line markers](https://expressive-code.com/key-features/text-markers/)
+   * of the "deleted" type.
+   *
+   * You can either pass a single marker definition or an array of them.
+   */
+  del?: MarkerDefinition | MarkerDefinition[];
+}
+---
+
+<Code {...Astro.props} />

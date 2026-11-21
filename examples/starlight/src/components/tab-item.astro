@@ -1,0 +1,32 @@
+---
+/**
+ * A set of tabs is composed of tab items, each with the following props:
+ *
+ * @example
+ * ```astro
+ * ---
+ * import Tabs from "@/components/tabs.astro";
+ * ---
+ *
+ * <Tabs>
+ *   <TabItem label="Stars" icon="star">
+ *     Sirius, Vega, Betelgeuse
+ *   </TabItem>
+ *   <TabItem label="Moons" icon="moon">
+ *     Io, Europa, Ganymede
+ *   </TabItem>
+ * </Tabs>
+ * ```
+ */
+import { TabItem } from "@astrojs/starlight/components";
+import type { StarlightIcon } from "@astrojs/starlight/types";
+
+interface Props {
+  /** A tab item must include a `label` attribute set to the text that will be displayed in the tab. */
+  label: string;
+  /** Each tab item can include an `icon` attribute set to the name of [one of Starlight’s built-in icons](https://starlight.astro.build/reference/icons/#all-icons) to display an icon next to the label. */
+  icon?: StarlightIcon;
+}
+---
+
+<TabItem {...Astro.props}><slot /></TabItem>

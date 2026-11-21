@@ -1,0 +1,65 @@
+---
+/**
+ * To display small pieces of information, such as a status or category, use the `<Badge>` component.
+ *
+ * @example
+ * <Badge text="New" />
+ *
+ * @example
+ * ### Usage
+ *
+ * Display a badge using the `<Badge>` component and pass the content you want to display to the `text` attribute of the `<Badge>` component.
+ *
+ * By default, the badge will use the theme accent color of your site.
+ * To use a built-in badge color, set the `variant` attribute to one of the supported values.
+ *
+ * ```astro
+ * <ul>
+ *   <li><Badge text="Note" variant="note" /></li>
+ *   <li><Badge text="Success" variant="success" /></li>
+ *   <li><Badge text="Tip" variant="tip" /></li>
+ *   <li><Badge text="Caution" variant="caution" /></li>
+ *   <li><Badge text="Danger" variant="danger" /></li>
+ * </ul>
+ * ```
+ *
+ * @example
+ * #### Use different sizes
+ *
+ * Use the `size` attribute to control the size of the badge text.
+ *
+ * ```astro
+ * <ul>
+ *   <li><Badge text="New" size="small" /></li>
+ *   <li><Badge text="New and improved" size="medium" /></li>
+ *   <li><Badge text="New, improved, and bigger" size="large" /></li>
+ * </ul>
+ * ```
+ *
+ * @example
+ * #### Customize badges
+ *
+ * Customize badges by using any other `<span>` attributes such as `class` or `style` with custom CSS.
+ *
+ * ```astro
+ * <Badge text="Custom" variant="success" style={{ fontStyle: 'italic' }} />
+ * ```
+ */
+import { Badge } from "@astrojs/starlight/components";
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"span"> {
+  /** The text content to display in the badge. */
+  text: string;
+  /** The badge color variant to use: `note` (blue), `tip` (purple), `danger` (red), `caution` (orange), `success` (green), or `default` (theme accent color). */
+  variant?: "note" | "danger" | "success" | "caution" | "tip" | "default";
+  /** Defines the size of the badge to display. */
+  size?: "small" | "medium" | "large";
+  /** The CSS classes to add to the badge. */
+  class?: string;
+}
+
+const { variant = "default", size = "small", ...props } = Astro.props;
+---
+
+<Badge variant={variant} size={size} {...props} />

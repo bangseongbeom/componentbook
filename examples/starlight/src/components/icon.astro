@@ -1,0 +1,55 @@
+---
+/**
+ * To display icons from Starlight’s [built-in icon set](https://starlight.astro.build/reference/icons/#all-icons), use the `<Icon>` component.
+ *
+ * @example
+ * <Icon name="open-book" color="var(--sl-color-text-accent)" size="4rem" />
+ *
+ * @example
+ * ### Usage
+ *
+ * Display an icon using the `<Icon>` component.
+ * An icon requires a `name` set to [one of Starlight’s built-in icons](https://starlight.astro.build/reference/icons/#all-icons) and can optionally include a `label` to provide context for screen readers.
+ *
+ * ```astro
+ * <Icon name="star" />
+ * <Icon name="starlight" label="The Starlight logo" />
+ * ```
+ *
+ * @example
+ * #### Customize icons
+ *
+ * The `size` and `color` attributes can be used to adjust the icon’s appearance using CSS units and color values.
+ * The `class` attribute can be used to add custom CSS classes to the icon.
+ *
+ * ```astro
+ * <Icon name="star" color="goldenrod" size="2rem" />
+ * <Icon name="rocket" color="var(--sl-color-text-accent)" />
+ * ```
+ */
+import { Icon } from "@astrojs/starlight/components";
+import type { StarlightIcon } from "@astrojs/starlight/types";
+
+interface Props {
+  /** The name of the icon to display set to [one of Starlight’s built-in icons](https://starlight.astro.build/reference/icons/#all-icons). */
+  name: StarlightIcon;
+  /**
+   * An optional label to provide context for assistive technologies, such as screen readers.
+   *
+   * When `label` is not set, the icon will be completely hidden from assistive technologies.
+   * In this case, make sure the context is still understandable without the icon.
+   * For example, a link containing only the icon **must** include the `label` attribute in order to be accessible, but if a link contains text and the icon is purely decorative, omitting the `label` may make sense.
+   */
+  label?: string;
+  /** The size of the icon using CSS units. */
+  size?: string;
+  /** The color of the icon using a CSS color value. */
+  color?: string;
+  /** Custom CSS classes to add to the icon. */
+  class?: string;
+}
+
+const { size = "1em", ...props } = Astro.props;
+---
+
+<Icon size={size} {...props} />

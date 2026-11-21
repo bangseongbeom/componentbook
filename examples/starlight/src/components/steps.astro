@@ -1,0 +1,66 @@
+---
+/**
+ * To style a numbered list of tasks to create step-by-step guides, use the `<Steps>` component.
+ *
+ * @example
+ * ```astro
+ * ---
+ * import Code from "@/components/code.astro";
+ * import TabItem from "@/components/tab-item.astro";
+ * import Tabs from "@/components/tabs.astro";
+ * ---
+ *
+ * <Steps>
+ *   <ol>
+ *     <li>
+ *       <p>Create a new Starlight project:</p>
+ *       <Tabs syncKey="pkg">
+ *         <TabItem label="npm">
+ *           <Code code="npm create astro@latest -- --template starlight" lang="sh" />
+ *         </TabItem>
+ *         <TabItem label="pnpm">
+ *           <Code code="pnpm create astro --template starlight" lang="sh" />
+ *         </TabItem>
+ *         <TabItem label="Yarn">
+ *           <Code code="yarn create astro --template starlight" lang="sh" />
+ *         </TabItem>
+ *       </Tabs>
+ *     </li>
+ *     <li>
+ *       <p>Write your first documentation page.</p>
+ *     </li>
+ *   </ol>
+ * </Steps>
+ * ```
+ *
+ * @example
+ * ### Usage
+ *
+ * Use the `<Steps>` component to style numbered lists of tasks.
+ * This is useful for more complex step-by-step guides where each step needs to be clearly highlighted.
+ *
+ * Wrap `<Steps>` around a standard Markdown ordered list.
+ * All the usual Markdown syntax is applicable inside `<Steps>`.
+ *
+ * ```astro
+ * ---
+ * import Code from "@/components/code.astro";
+ * ---
+ *
+ * <Steps>
+ *   <ol>
+ *     <li>
+ *       <p>Import the component into your MDX file:</p>
+ *       <Code code="import { Steps } from '@astrojs/starlight/components';" lang="js" />
+ *     </li>
+ *     <li>
+ *       <p>Wrap <code>&lt;Steps&gt;</code> around your ordered list items.</p>
+ *     </li>
+ *   </ol>
+ * </Steps>
+ * ```
+ */
+import { Steps } from "@astrojs/starlight/components";
+---
+
+<Steps><slot /></Steps>
