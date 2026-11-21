@@ -340,8 +340,11 @@ function highlightCode(code: string, framework: Framework): Promise<string> {
       framework === "starlight"
         ? // Starlight's default theme.
           { light: "night-owl-light", dark: "night-owl" }
-        : // Fumadocs' default theme.
-          { light: "github-light", dark: "github-dark" },
+        : framework === "docusaurus"
+          ? // The closest to `github` and `dracula`, the Prism themes of Docusaurus' template.
+            { light: "github-light", dark: "dracula" }
+          : // Fumadocs' default theme.
+            { light: "github-light", dark: "github-dark" },
     defaultColor: false,
     structure: "inline",
   });
