@@ -159,6 +159,7 @@ async function renderComponentSection(
 
     if (canPreview(component)) {
       // An expression keeps MDX from parsing the text as Markdown.
+      // `"_a_"` -> `{"_a_"}`, because `<A>_a_</A>` would render `<A><em>a</em></A>`
       const previewChildren = children?.dummy === undefined ? undefined : `{${children.dummy}}`;
       lines.push(
         "<ComponentbookPreview>",
@@ -210,7 +211,10 @@ function renderExample(
     exampleImports.push(...imports);
     return [
       "<ComponentbookPreview>",
-      // A fragment expression keeps MDX from parsing the JSX as Markdown.
+      // Without the expression, MDX parses text on its own line as a Markdown paragraph.
+      // `<A>\n  Use *args* here.\n</A>` -> `<A><p>Use <em>args</em> here.</p></A>`
+      // Without the fragment, MDX can't parse several root elements as an expression.
+      // `{<A /><B />}` -> a syntax error
       "  {<>",
       // Indents each line, except blank ones to avoid trailing whitespace.
       ...markup.split("\n").map((line) => (line === "" ? line : `    ${line}`)),
