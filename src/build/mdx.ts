@@ -158,7 +158,7 @@ async function renderComponentSection(
     const children = component.props.find((prop) => prop.name === "children" && prop.required);
 
     if (canPreview(component)) {
-      // An expression keeps MDX from parsing the text as Markdown.
+      // An expression keeps MDX from parsing the text as Markdown:
       // `"_a_"` -> `{"_a_"}`, because `<A>_a_</A>` would render `<A><em>a</em></A>`
       const previewChildren = children?.dummy === undefined ? undefined : `{${children.dummy}}`;
       lines.push(
@@ -211,14 +211,14 @@ function renderExample(
     exampleImports.push(...imports);
     return [
       "<ComponentbookPreview>",
-      // Without the expression, MDX parses text on its own line as a Markdown paragraph.
+      // Without the expression, MDX parses text on its own line as a Markdown paragraph:
       // `<A>\n  Use *args* here.\n</A>` -> `<A><p>Use <em>args</em> here.</p></A>`
-      // Without the fragment, MDX can't parse several root elements as an expression.
+      // Without the fragment, MDX can't parse several root elements as an expression:
       // `{<A /><B />}` -> a syntax error
       // The fragment isn't indented, to keep the markup nested in it.
       "{<>",
       // MDX strips up to 2 spaces from each line of an expression, so the markup is indented by 2.
-      // If it is indented by 4, multiline strings get 2 extra spaces.
+      // If it is indented by 4, multiline strings get 2 extra spaces:
       // `a\n  b` -> `a\n    b`
       // Blank lines stay empty, to avoid trailing whitespace.
       ...markup.split("\n").map((line) => (line === "" ? line : `  ${line}`)),
