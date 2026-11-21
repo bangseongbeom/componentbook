@@ -6,7 +6,7 @@ import build from "../build/index.js";
 import { detectFramework, frameworks, isFramework, loadConfig } from "../config.js";
 import watch from "../watch.js";
 
-const [bin] = Object.keys(packageConfig.bin);
+const bin = packageConfig.name;
 
 const { values, positionals } = parseArgs({
   options: {
